@@ -1,0 +1,3 @@
+{"ts":"2026-05-13T11:51:42.422Z","hook":"usage-quota-cache-refresh","event":"SessionStart","tool":"","target":"","note":"missing-credentials","dur":1,"status":"warn","exit":0,"error":""}
+{"ts":"2026-05-13T11:51:42.435Z","hook":"telemetry","event":"SessionStart","tool":"","target":"","note":"","dur":1,"status":"ok","exit":0,"error":""}
+{"ts":"2026-05-13T11:51:42.457Z","hook":"session-init","event":"SessionStart","tool":"","target":"","note":"startup","dur":30,"status":"ok","exit":0,"error":""}
