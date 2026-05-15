@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "supabase:start": "set -a && . ./.env.local && set +a && supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:restart": "npm run supabase:stop && npm run supabase:start"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
