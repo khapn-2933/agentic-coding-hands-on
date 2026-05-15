@@ -9,8 +9,8 @@ interface GoogleLoginButtonProps {
 function GoogleIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="24"
+      height="24"
       viewBox="0 0 24 24"
       aria-hidden="true"
       fill="none"
@@ -39,7 +39,7 @@ function GoogleIcon() {
 function Spinner() {
   return (
     <svg
-      className="animate-spin h-5 w-5 text-[#1a1a2e]"
+      className="animate-spin h-6 w-6 text-[#1a1a2e]"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
@@ -74,20 +74,28 @@ export default function GoogleLoginButton({
       type="button"
       onClick={onClick}
       disabled={isDisabled}
-      className={[
-        "inline-flex items-center gap-3 px-7 py-3 rounded-full",
-        "bg-[#f5c518] text-[#1a1a2e] font-semibold text-sm tracking-wide",
-        "transition-all duration-200",
-        isDisabled
-          ? "opacity-60 cursor-not-allowed"
-          : "hover:bg-[#f0b800] hover:shadow-[0_0_20px_rgba(245,197,24,0.4)] cursor-pointer",
-      ]
-        .filter(Boolean)
-        .join(" ")}
       aria-busy={loading}
+      style={{
+        backgroundColor: "#FFEA9E",
+        color: "#1a1a2e",
+        padding: "16px 24px",
+        borderRadius: "8px",
+        gap: "8px",
+        width: "305px",
+        height: "60px",
+        fontSize: "16px",
+        fontWeight: 700,
+        letterSpacing: "0.5px",
+      }}
+      className={[
+        "inline-flex items-center transition-shadow duration-200",
+        isDisabled
+          ? "opacity-70 cursor-not-allowed"
+          : "hover:shadow-[0_8px_24px_rgba(255,234,158,0.35)] cursor-pointer",
+      ].join(" ")}
     >
       {loading ? <Spinner /> : <GoogleIcon />}
-      <span className={loading ? "opacity-60" : ""}>LOGIN With Google</span>
+      <span>LOGIN With Google</span>
     </button>
   );
 }

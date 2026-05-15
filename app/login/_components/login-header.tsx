@@ -1,22 +1,25 @@
+import Image from "next/image";
 import LanguageSelector from "./language-selector";
 
 export default function LoginHeader() {
   return (
-    <header className="relative z-10 flex items-center justify-between px-6 py-4">
-      {/* A.1 — Logo: text placeholder per clarifications */}
-      <div className="flex flex-col leading-tight">
-        <span className="text-white text-xs font-bold tracking-widest uppercase opacity-90">
-          Sun
-        </span>
-        <span className="text-[#f5c518] text-xs font-bold tracking-widest uppercase">
-          Annual Awards
-        </span>
-        <span className="text-white text-xs font-semibold tracking-wider opacity-80">
-          2025
-        </span>
+    <header
+      className="relative z-20 flex items-center justify-between"
+      style={{
+        backgroundColor: "rgba(11, 15, 18, 0.8)",
+        padding: "12px 144px",
+        height: "80px",
+      }}
+    >
+      <div className="flex items-center">
+        <Image
+          src="/sun-logo.png"
+          alt="Sun Annual Awards 2025"
+          width={52}
+          height={48}
+          priority
+        />
       </div>
-
-      {/* A.2 — Language selector */}
       <LanguageSelector current="VN" />
     </header>
   );

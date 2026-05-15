@@ -1,4 +1,4 @@
-import KeyVisual from "./key-visual";
+import Image from "next/image";
 import GoogleLoginButton from "./google-login-button";
 
 interface LoginHeroProps {
@@ -11,38 +11,43 @@ export default function LoginHero({
   loginLoading = false,
 }: LoginHeroProps) {
   return (
-    <section className="relative flex-1 flex overflow-hidden">
-      {/* B.1 — Key visual: full-bleed abstract artwork fills the right side */}
-      <div className="absolute inset-0">
-        <KeyVisual />
-      </div>
-
-      {/* B.2 + B.3 — Content column: left side over the dark area */}
-      <div className="relative z-10 flex flex-col justify-center px-8 md:px-14 max-w-lg">
-        {/* B.2 — Hero title */}
-        <h1
-          className="text-white font-black leading-none tracking-tight mb-6"
-          style={{ fontSize: "clamp(3.5rem, 10vw, 6rem)" }}
-        >
-          ROOT
-          <br />
-          FURTHER
-        </h1>
-
-        {/* B.2 — Description lines */}
-        <p className="text-[#8ba8cc] text-base font-medium mb-1">
-          Bắt đầu hành trình của bạn cùng SAA 2025.
-        </p>
-        <p className="text-[#8ba8cc] text-base font-medium mb-8">
-          Đăng nhập để khám phá!
-        </p>
-
-        {/* B.3 — Google login CTA */}
-        <div>
-          <GoogleLoginButton
-            onClick={onLoginClick}
-            loading={loginLoading}
+    <section
+      className="relative z-10 flex-1 flex flex-col justify-center"
+      style={{ padding: "96px 144px" }}
+    >
+      <div className="flex flex-col" style={{ gap: "80px" }}>
+        <div className="w-full max-w-[451px]">
+          <Image
+            src="/root-further.png"
+            alt="ROOT FURTHER"
+            width={451}
+            height={200}
+            priority
+            sizes="(max-width: 768px) 80vw, 451px"
+            className="h-auto w-full"
           />
+        </div>
+
+        <div className="flex flex-col" style={{ gap: "24px", paddingLeft: "16px" }}>
+          <p
+            className="text-white whitespace-pre-line"
+            style={{
+              fontSize: "20px",
+              fontWeight: 700,
+              lineHeight: "40px",
+              letterSpacing: "0.5px",
+              maxWidth: "480px",
+            }}
+          >
+            {"Bắt đầu hành trình của bạn cùng SAA 2025.\nĐăng nhập để khám phá!"}
+          </p>
+
+          <div>
+            <GoogleLoginButton
+              onClick={onLoginClick}
+              loading={loginLoading}
+            />
+          </div>
         </div>
       </div>
     </section>

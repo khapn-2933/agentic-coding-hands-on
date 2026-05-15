@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser-client";
+import KeyVisual from "./_components/key-visual";
 import LoginHeader from "./_components/login-header";
 import LoginHero from "./_components/login-hero";
 import LoginFooter from "./_components/login-footer";
@@ -35,12 +36,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col flex-1 bg-[#0a1428] min-h-screen">
+    <div className="relative flex flex-col flex-1 min-h-screen bg-[#00101A] overflow-hidden">
+      <KeyVisual />
       <LoginHeader />
       <LoginHero onLoginClick={handleGoogleLogin} loginLoading={loginLoading} />
       {error ? (
-        <div className="flex justify-center pb-2">
-          <p className="text-sm text-red-400" role="alert">
+        <div className="relative z-20 flex justify-center pb-2">
+          <p className="text-sm text-red-300" role="alert">
             {error}
           </p>
         </div>
