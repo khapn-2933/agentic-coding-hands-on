@@ -1,7 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/proxy-client";
 
-const PUBLIC_PATHS = new Set(["/login"]);
+// Routes that require an authenticated user. Everything else is public.
+// Catch-all stub `/[slug]` and the homepage `/` are public per spec.
+const PROTECTED_PREFIXES = ["/profile", "/admin"];
 const AUTH_API_PREFIX = "/auth/";
 
 export async function proxy(request: NextRequest) {
@@ -12,9 +14,11 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  const isPublic = PUBLIC_PATHS.has(pathname);
+  const isProtected = PROTECTED_PREFIXES.some(
+    (p) => pathname === p || pathname.startsWith(p + "/")
+  );
 
-  if (!user && !isPublic) {
+  if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
