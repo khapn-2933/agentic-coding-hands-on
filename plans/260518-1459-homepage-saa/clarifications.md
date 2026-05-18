@@ -6,7 +6,7 @@ Stack: Next.js 16.2.6 + React 19 + Tailwind v4 + Supabase SSR (already wired fro
 
 ## Session 2026-05-18
 
-- Q: Access model for `/` (test cases ID-0/ID-1 say homepage is public, auth chrome conditional) → A: Make `/` public; update `proxy.ts` to remove `/` from protected paths. Bell + avatar render only when authed. Sign-in CTA shown when unauth.
+- Q: Access model for `/` (test cases ID-0/ID-1 say homepage is public, auth chrome conditional) → A: ~~Make `/` public; update `proxy.ts` to remove `/` from protected paths.~~ **OVERRIDDEN 2026-05-18:** User reversed the decision — homepage must require auth (treating test ID-0 as out of scope for this iteration). `proxy.ts` now uses the original allow-list: PUBLIC_PATHS = ["/login"], everything else gates to /login when unauth. The conditional auth-chrome path in `SaaHeader` for unauth users (Sign in CTA) becomes unreachable but stays in code as future-proofing.
 - Q: Language switcher (VN/EN, tests ID-24/25/26) → A: Visual-only for now, dropdown with both options selectable, persist to localStorage. Real i18n deferred. Login screen's language selector stays as-is (visual-only).
 - Q: Missing navigation targets (/awards, /sun-kudos, /profile, /admin, /about-saa, /tieu-chuan-chung) → A: Single catch-all `app/(stub)/[...slug]/page.tsx` renders "Coming soon — trang này đang được xây" placeholder. Links work, no 404s.
 - Q: Floating Widget button quick-action menu → A: Visual-only chip. Click is no-op (console.log). TODO comment for future quick actions.
