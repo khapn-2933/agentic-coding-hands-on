@@ -6,7 +6,7 @@ import Link from "next/link";
 import CountdownTile from "./countdown-tile";
 
 export interface HeroCountdownProps {
-  eventStartAt: string; // ISO-8601, e.g. "2025-12-26T18:30:00+07:00"
+  eventStartAt: string;
 }
 
 interface CountdownValues {
@@ -33,16 +33,10 @@ function computeCountdown(eventStartAt: string): CountdownValues {
   const hours = totalHours % 24;
   const days = Math.floor(totalHours / 24);
 
-  return {
-    days: pad(days),
-    hours: pad(hours),
-    minutes: pad(minutes),
-    isPast: false,
-  };
+  return { days: pad(days), hours: pad(hours), minutes: pad(minutes), isPast: false };
 }
 
 export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
-  // SSR-safe initial state: "00 00 00" to avoid hydration mismatch
   const [countdown, setCountdown] = useState<CountdownValues>({
     days: "00",
     hours: "00",
@@ -51,14 +45,10 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
   });
 
   useEffect(() => {
-    // First tick immediately after mount
     setCountdown(computeCountdown(eventStartAt));
-
-    // Update every 60 seconds
     const timer = setInterval(() => {
       setCountdown(computeCountdown(eventStartAt));
     }, 60_000);
-
     return () => clearInterval(timer);
   }, [eventStartAt]);
 
@@ -75,76 +65,91 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
   })();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background key visual */}
+    <section className="relative min-h-screen overflow-hidden">
+      {/* Background key visual — artwork on the right side */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/homepage-keyvisual.png"
           alt=""
           fill
           priority
-          className="object-cover object-center"
           sizes="100vw"
+          className="object-cover object-right"
         />
-        {/* Dark overlay for readability */}
-        <div className="absolute inset-0 bg-[#00101A]/40" />
+        {/* Left fade so content remains legible against the artwork */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(90deg, #00101A 0%, #00101A 25.41%, rgba(0, 16, 26, 0) 100%)",
+          }}
+        />
+        {/* Bottom fade into the next section */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(0deg, #00101A 22.48%, rgba(0, 19, 32, 0) 51.74%)",
+          }}
+        />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-4 pt-24 pb-16 gap-6">
-        {/* ROOT FURTHER image */}
+      {/* Content — left aligned, sits over the dark side */}
+      <div className="relative z-10 flex flex-col min-h-screen justify-center px-6 md:px-18 lg:px-36 pt-32 pb-24 gap-8">
         <Image
           src="/root-further.png"
           alt="ROOT FURTHER"
           width={451}
           height={200}
           priority
-          className="w-auto max-w-[80vw] md:max-w-[451px]"
+          className="h-auto w-[280px] sm:w-[360px] md:w-[451px]"
         />
 
-        {/* Coming soon label */}
-        {showComingSoon && (
-          <p className="text-sm font-medium uppercase tracking-[0.3em] text-white/70">
-            Coming soon
-          </p>
-        )}
+        <div className="flex flex-col gap-4">
+          {showComingSoon && (
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-white/80">
+              Coming soon
+            </p>
+          )}
 
-        {/* Countdown grid */}
-        <div className="flex items-start gap-4 md:gap-6">
-          <CountdownTile value={countdown.days} label="DAYS" />
-          <span className="text-4xl md:text-5xl font-bold text-white/30 mt-2 leading-none select-none">
-            :
-          </span>
-          <CountdownTile value={countdown.hours} label="HOURS" />
-          <span className="text-4xl md:text-5xl font-bold text-white/30 mt-2 leading-none select-none">
-            :
-          </span>
-          <CountdownTile value={countdown.minutes} label="MINUTES" />
+          <div className="flex items-start gap-3 md:gap-5">
+            <CountdownTile value={countdown.days} label="DAYS" />
+            <span className="text-4xl md:text-5xl font-bold text-white/30 mt-2 leading-none select-none">
+              :
+            </span>
+            <CountdownTile value={countdown.hours} label="HOURS" />
+            <span className="text-4xl md:text-5xl font-bold text-white/30 mt-2 leading-none select-none">
+              :
+            </span>
+            <CountdownTile value={countdown.minutes} label="MINUTES" />
+          </div>
         </div>
 
-        {/* Event info */}
-        <div className="flex flex-col gap-1 mt-2">
-          <p className="text-sm text-white/70">
-            Thời gian: {eventDate}&nbsp;&nbsp;&nbsp;Địa điểm: Âu Cơ Art Center
+        <div className="flex flex-col gap-1">
+          <p className="text-sm text-white/80">
+            <span className="font-semibold">Thời gian:</span> {eventDate}
+            <span className="mx-3 text-white/30">|</span>
+            <span className="font-semibold">Địa điểm:</span> Âu Cơ Art Center
           </p>
-          <p className="text-sm text-white/70">
+          <p className="text-sm text-white/60">
             Tường thuật trực tiếp qua sóng Livestream
           </p>
         </div>
 
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 mt-4">
+        <div className="flex flex-col sm:flex-row items-start gap-4">
           <Link
             href="/awards"
-            className="px-8 py-3 rounded-full text-sm font-bold uppercase tracking-[0.1em] text-[#00101A] bg-[#FFEA9E] hover:bg-[#ffe47a] transition-colors"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold uppercase tracking-[0.1em] text-[#00101A] bg-[#FFEA9E] hover:bg-[#ffe47a] transition-colors"
           >
             ABOUT AWARDS
+            <span aria-hidden="true">↗</span>
           </Link>
           <Link
             href="/sun-kudos"
-            className="px-8 py-3 rounded-full text-sm font-bold uppercase tracking-[0.1em] text-white border border-white hover:bg-white/10 transition-colors"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold uppercase tracking-[0.1em] text-white border border-white/60 hover:bg-white/10 transition-colors"
           >
             ABOUT KUDOS
+            <span aria-hidden="true">↗</span>
           </Link>
         </div>
       </div>
