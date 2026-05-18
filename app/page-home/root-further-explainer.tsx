@@ -1,45 +1,28 @@
+import Image from "next/image";
+
 export default function RootFurtherExplainer() {
   return (
-    <section className="w-full bg-[#00101A] py-20 px-4 md:px-18 lg:px-36">
-      <div className="max-w-4xl flex flex-col gap-10 lg:pl-9">
-        {/* Section heading with ROOT FURTHER image mark */}
-        <h2
-          className="text-3xl md:text-4xl font-bold uppercase"
-          style={{ fontFamily: "var(--font-montserrat-alt), var(--font-montserrat), sans-serif" }}
-        >
-          ROOT FURTHER
-        </h2>
+    <section className="w-full bg-[#00101A] py-20 px-4 md:px-18 lg:px-[180px]">
+      <div className="mx-auto flex max-w-[1152px] flex-col items-center gap-8">
+        <Image
+          src="/root-further.png"
+          alt="ROOT FURTHER"
+          width={290}
+          height={134}
+          className="h-auto w-[220px] md:w-[290px]"
+        />
 
-        {/* Long Vietnamese explainer paragraph */}
-        {/* TODO: Verify exact body text against Figma design strip 2 — text below adapted from design image */}
-        <div className="text-base md:text-lg text-white/80 leading-relaxed space-y-4">
-          <p>
-            Trong hành trình không ngừng đổi mới của mình, Sun* đã và đang viết nên những chương sách về sự phát
-            triển bền vững, về những con người với tầm nhìn xa rộng và tinh thần kiên trì. Mỗi năm qua, chúng tôi
-            lại có thêm những lý do để tin rằng: nền móng vững chắc chính là nền tảng để vươn cao hơn, đi xa hơn.
-          </p>
-          <p>
-            SAA 2025 — Sun* Annual Awards năm nay mang chủ đề &ldquo;ROOT FURTHER&rdquo; — Vững Rộng Sâu Hơn — như
-            một tuyên ngôn về hành trình chúng ta đang đi. Không chỉ là những thành tích nổi bật hay kết quả ấn
-            tượng, mà là sự biểu hiện của những giá trị cốt lõi: sự chuyên tâm, tính kiên trì, và khả năng đứng
-            vững trước mọi biến động. Mỗi giải thưởng là một câu chuyện, mỗi người được vinh danh là một ngọn lửa
-            nung chảy khát vọng của cả tổ chức.
-          </p>
-          <p>
-            Hãy cùng nhau lan toả ngọn lửa ấy — để từng rễ cây trong chúng ta được vững chắc hơn, để từng tâm hồn
-            trong tổ chức được nuôi dưỡng hơn, và để Sun* tiếp tục viết nên những chương sử thi của riêng mình.
-          </p>
-        </div>
+        <p className="w-full text-justify text-base md:text-2xl font-bold leading-[32px] text-white whitespace-pre-line">
+          {"Đứng trước bối cảnh thay đổi như vũ bão của thời đại AI và yêu cầu ngày càng cao từ khách hàng, Sun* lựa chọn chiến lược đa dạng hóa năng lực để không chỉ nỗ lực trở thành tinh anh trong lĩnh vực của mình, mà còn hướng đến một cái đích cao hơn, nơi mọi Sunner đều là “problem-solver” - chuyên gia trong việc giải quyết mọi vấn đề, tìm lời giải cho mọi bài toán của dự án, khách hàng và xã hội.\nLấy cảm hứng từ sự đa dạng năng lực, khả năng phát triển linh hoạt cùng tinh thần đào sâu để bứt phá trong kỷ nguyên AI, “Root Further” đã được chọn để trở thành chủ đề chính thức của Lễ trao giải Sun* Annual Awards 2025.\nVượt ra khỏi nét nghĩa bề mặt, “Root Further” chính là hành trình chúng ta không ngừng vươn xa hơn, cắm rễ mạnh hơn, chạm đến những tầng “địa chất” ẩn sâu để tiếp tục tồn tại, vươn lên và nuôi dưỡng đam mê kiến tạo giá trị luôn cháy bỏng của người Sun*. Mượn hình ảnh bộ rễ liên tục đâm sâu vào lòng đất, mạnh mẽ len lỏi qua từng lớp “trầm tích” để thẩm thấu những gì tinh tuý nhất, người Sun* cũng đang “hấp thụ” dưỡng chất từ thời đại và những thử thách của thị trường để làm mới mình mỗi ngày, mở rộng năng lực và mạnh mẽ “bén rễ” vào kỷ nguyên AI - một tầng “địa chất” hoàn toàn mới, phức tạp và khó đoán, nhưng cũng hội tụ vô vàn tiềm năng cùng cơ hội."}
+        </p>
 
-        {/* Pull quote */}
-        <blockquote className="border-l-4 border-[#FFEA9E] pl-6 py-2 mt-4">
-          <p className="text-lg md:text-2xl font-semibold italic text-white leading-snug">
-            &ldquo;A tree with deep roots fears no storm&rdquo;
-          </p>
-          <p className="mt-2 text-sm text-white/50">
-            (Cây sâu bền rễ, bão giông chẳng nề — Ngạn ngữ Anh)
-          </p>
-        </blockquote>
+        <p className="w-full text-center text-xl font-bold leading-[32px] text-white whitespace-pre-line">
+          {" “A tree with deep roots fears no storm”\n (Cây sâu bén rễ, bão giông chẳng nề - Ngạn ngữ Anh)"}
+        </p>
+
+        <p className="w-full text-justify text-base md:text-2xl font-bold leading-[32px] text-white whitespace-pre-line">
+          {"Trước giông bão, chỉ những tán cây có bộ rễ đủ mạnh mới có thể trụ vững. Một tổ chức với những cá nhân tự tin vào năng lực đa dạng, sẵn sàng kiến tạo và đón nhận thử thách, làm chủ sự thay đổi là tổ chức không chỉ vững vàng trước biến động, mà còn khai thác được mọi lợi thế, chinh phục các thách thức của thời cuộc. Không đơn thuần là tên gọi của chương mới trên hành trình phát triển tổ chức, “Root Further” còn như một lời cổ vũ, động viên mỗi chúng ta hãy dám tin vào bản thân, dám đào sâu, khai mở mọi tiềm năng, dám phá bỏ giới hạn, dám trở thành phiên bản đa nhiệm và xuất sắc nhất của mình. Bởi trong thời đại AI, đa dạng năng lực và tận dụng sức mạnh thời cuộc chính là điều kiện tiên quyết để trường tồn.\nKhông ai biết trước ẩn sâu trong “lòng đất” của ngành công nghệ và thị trường hiện đại còn biết bao tầng “địa chất” bí ẩn. Chỉ biết rằng khi “Root Further” đã trở thành tinh thần cội rễ, chúng ta sẽ không sợ hãi, mà càng thấy háo hức trước bất cứ vùng vô định nào trên hành trình tiến về phía trước. Vì ta luôn tin rằng, trong chính những miền vô tận đó, là bao điều kỳ diệu và cơ hội vươn mình đang chờ ta."}
+        </p>
       </div>
     </section>
   );

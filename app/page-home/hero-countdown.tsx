@@ -66,7 +66,6 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
 
   return (
     <section className="relative min-h-screen overflow-hidden">
-      {/* Background key visual — artwork on the right side */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/homepage-keyvisual.png"
@@ -76,7 +75,6 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
           sizes="100vw"
           className="object-cover object-right"
         />
-        {/* Left fade so content remains legible against the artwork */}
         <div
           className="absolute inset-0"
           style={{
@@ -84,7 +82,6 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
               "linear-gradient(90deg, #00101A 0%, #00101A 25.41%, rgba(0, 16, 26, 0) 100%)",
           }}
         />
-        {/* Bottom fade into the next section */}
         <div
           className="absolute inset-0"
           style={{
@@ -94,7 +91,6 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
         />
       </div>
 
-      {/* Content — left aligned, sits over the dark side */}
       <div className="relative z-10 flex flex-col min-h-screen justify-center px-6 md:px-18 lg:px-36 pt-32 pb-24 gap-8">
         <Image
           src="/root-further.png"
@@ -107,31 +103,38 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
 
         <div className="flex flex-col gap-4">
           {showComingSoon && (
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-white/80">
+            <p className="text-2xl font-bold leading-[32px] text-white">
               Coming soon
             </p>
           )}
 
-          <div className="flex items-start gap-3 md:gap-5">
+          <div className="flex items-start gap-10">
             <CountdownTile value={countdown.days} label="DAYS" />
-            <span className="text-4xl md:text-5xl font-bold text-white/30 mt-2 leading-none select-none">
-              :
-            </span>
             <CountdownTile value={countdown.hours} label="HOURS" />
-            <span className="text-4xl md:text-5xl font-bold text-white/30 mt-2 leading-none select-none">
-              :
-            </span>
             <CountdownTile value={countdown.minutes} label="MINUTES" />
           </div>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <p className="text-sm text-white/80">
-            <span className="font-semibold">Thời gian:</span> {eventDate}
-            <span className="mx-3 text-white/30">|</span>
-            <span className="font-semibold">Địa điểm:</span> Âu Cơ Art Center
-          </p>
-          <p className="text-sm text-white/60">
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-wrap items-center gap-x-[60px] gap-y-2">
+            <p className="flex items-baseline gap-2">
+              <span className="text-base font-bold leading-6 tracking-[0.15px] text-white">
+                Thời gian:
+              </span>
+              <span className="text-2xl font-bold leading-[32px] text-[#FFEA9E]">
+                {eventDate}
+              </span>
+            </p>
+            <p className="flex items-baseline gap-2">
+              <span className="text-base font-bold leading-6 tracking-[0.15px] text-white">
+                Địa điểm:
+              </span>
+              <span className="text-2xl font-bold leading-[32px] text-[#FFEA9E]">
+                Âu Cơ Art Center
+              </span>
+            </p>
+          </div>
+          <p className="text-base font-bold leading-6 tracking-[0.5px] text-white">
             Tường thuật trực tiếp qua sóng Livestream
           </p>
         </div>
