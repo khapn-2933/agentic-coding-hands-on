@@ -26,7 +26,7 @@ export default function SunKudosBlock() {
           </div>
 
           {/* Text content */}
-          <div className="relative z-10 flex flex-col justify-center gap-5 p-8 md:p-12 max-w-xl">
+          <div className="relative z-10 flex flex-col justify-center gap-5 p-8 md:p-12 lg:py-16 lg:pl-24 max-w-xl">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/40">
               Phong trào ghi nhận
             </p>
