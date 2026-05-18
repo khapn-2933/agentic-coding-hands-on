@@ -8,7 +8,7 @@ export interface AwardCardProps {
   description: string;
 }
 
-function ArrowRight() {
+function ArrowUpRight() {
   return (
     <svg
       width="16"
@@ -19,7 +19,7 @@ function ArrowRight() {
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M3 8h10M9 4l4 4-4 4"
+        d="M5 11l6-6M5 5h6v6"
         stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
@@ -31,32 +31,41 @@ function ArrowRight() {
 
 export default function AwardCard({ slug, imageSrc, title, description }: AwardCardProps) {
   return (
-    <article className="flex flex-col gap-4">
-      {/* Award composite image (includes gold halo + embedded title) */}
-      <div className="relative w-full aspect-square max-w-[336px] mx-auto">
+    <article className="flex flex-col gap-6">
+      <div
+        className="relative w-full aspect-square max-w-[336px] mx-auto overflow-hidden rounded-[24px] border border-[#FFEA9E]/60"
+        style={{ boxShadow: "0 0 6px 0 #FAE287, 0 4px 4px 0 rgba(0, 0, 0, 0.25)" }}
+      >
         <Image
           src={imageSrc}
           alt={title}
           width={336}
           height={336}
-          className="w-full h-full object-contain"
+          className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
 
-      {/* Text content */}
       <div className="flex flex-col gap-1 px-1">
-        <h3 className="text-base font-bold text-white">{title}</h3>
-        <p className="text-sm text-white/60 leading-relaxed">{description}</p>
+        <h3
+          className="text-2xl font-normal leading-[32px] text-[#FFEA9E]"
+        >
+          {title}
+        </h3>
+        <p
+          className="text-base font-normal text-white"
+          style={{ lineHeight: "24px", letterSpacing: "0.5px" }}
+        >
+          {description}
+        </p>
       </div>
 
-      {/* Detail link */}
       <Link
         href={`/awards#${slug}`}
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-[#FFEA9E] hover:underline transition-colors px-1"
+        className="inline-flex items-center gap-1 self-start text-base font-medium text-white tracking-[0.15px] hover:underline transition-colors px-1"
         aria-label={`Chi tiết về ${title}`}
       >
         Chi tiết
-        <ArrowRight />
+        <ArrowUpRight />
       </Link>
     </article>
   );

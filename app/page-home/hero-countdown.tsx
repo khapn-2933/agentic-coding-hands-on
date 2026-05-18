@@ -66,32 +66,7 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
 
   return (
     <section className="relative min-h-screen overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/homepage-keyvisual.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-right"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(90deg, #00101A 0%, #00101A 25.41%, rgba(0, 16, 26, 0) 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(0deg, #00101A 22.48%, rgba(0, 19, 32, 0) 51.74%)",
-          }}
-        />
-      </div>
-
-      <div className="relative z-10 flex flex-col min-h-screen justify-center px-6 md:px-18 lg:px-36 pt-32 pb-24 gap-8">
+      <div className="relative flex flex-col min-h-screen justify-center px-6 md:px-18 lg:px-36 pt-32 pb-24 gap-8">
         <Image
           src="/root-further.png"
           alt="ROOT FURTHER"

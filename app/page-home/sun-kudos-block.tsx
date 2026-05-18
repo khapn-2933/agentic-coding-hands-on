@@ -6,6 +6,24 @@ export default function SunKudosBlock() {
     <section className="w-full bg-[#00101A] py-20 px-4 md:px-18 lg:px-36 overflow-hidden">
       <div className="mx-auto max-w-[1224px]">
         <div className="relative overflow-hidden rounded-[16px] bg-[#0F0F0F] min-h-[500px] flex">
+          {/* Warm gold glow on the right side, evoking the ribbon decoration in the design. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 right-0 w-2/3"
+            style={{
+              background:
+                "radial-gradient(circle at 70% 50%, rgba(212, 175, 89, 0.25) 0%, rgba(212, 175, 89, 0.08) 35%, transparent 70%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-0 right-0 h-full w-1/2"
+            style={{
+              background:
+                "linear-gradient(115deg, transparent 0%, rgba(255, 215, 130, 0.06) 40%, rgba(255, 215, 130, 0.12) 60%, transparent 100%)",
+            }}
+          />
+
           {/* Right-side Sun* + KUDOS branded wordmark */}
           <div className="pointer-events-none absolute inset-y-0 right-0 hidden lg:flex items-center justify-end pr-16 z-[1]">
             <Image

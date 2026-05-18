@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function RootFurtherExplainer() {
   return (
-    <section className="w-full bg-[#00101A] py-20 px-4 md:px-18 lg:px-[180px]">
+    <section className="relative w-full py-20 px-4 md:px-18 lg:px-[180px]">
       <div className="mx-auto flex max-w-[1152px] flex-col items-center gap-8">
         <Image
           src="/root-further.png"

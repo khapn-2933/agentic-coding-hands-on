@@ -3,6 +3,7 @@ import { getEventStartAt } from "@/lib/event-config";
 import SaaHeader from "./_components/saa-header";
 import SaaFooter from "./_components/saa-footer";
 import WidgetButton from "./_components/widget-button";
+import HeroArea from "./page-home/hero-area";
 import HeroCountdown from "./page-home/hero-countdown";
 import RootFurtherExplainer from "./page-home/root-further-explainer";
 import AwardsGrid from "./page-home/awards-grid";
@@ -25,8 +26,10 @@ export default async function HomePage() {
     <>
       <SaaHeader user={headerUser} activePath="about-saa" />
       <main className="flex flex-1 flex-col">
-        <HeroCountdown eventStartAt={getEventStartAt()} />
-        <RootFurtherExplainer />
+        <HeroArea>
+          <HeroCountdown eventStartAt={getEventStartAt()} />
+          <RootFurtherExplainer />
+        </HeroArea>
         <AwardsGrid />
         <SunKudosBlock />
       </main>
