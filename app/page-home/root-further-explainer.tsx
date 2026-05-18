@@ -1,7 +1,7 @@
 export default function RootFurtherExplainer() {
   return (
     <section className="w-full bg-[#00101A] py-20 px-4 md:px-18 lg:px-36">
-      <div className="max-w-4xl mx-auto flex flex-col gap-10">
+      <div className="max-w-4xl flex flex-col gap-10">
         {/* Section heading with ROOT FURTHER image mark */}
         <h2
           className="text-3xl md:text-4xl font-bold uppercase"
