@@ -44,11 +44,15 @@ export default function AwardsGrid() {
     <section className="w-full bg-[#00101A] py-20 px-4 md:px-18 lg:px-36">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
-        <div className="flex flex-col gap-2 mb-12">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/40">
+        <div className="flex flex-col gap-4 mb-12">
+          <p className="text-2xl font-bold leading-[32px] text-white">
             Sun* annual awards 2025
           </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-white">
+          <div className="h-px w-full bg-[#2E3940]" />
+          <h2
+            className="text-4xl md:text-[57px] md:leading-[64px] font-bold text-[#FFEA9E]"
+            style={{ letterSpacing: "-0.25px" }}
+          >
             Hệ thống giải thưởng
           </h2>
         </div>

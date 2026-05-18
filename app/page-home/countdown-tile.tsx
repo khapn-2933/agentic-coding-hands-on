@@ -19,32 +19,32 @@ const SEGMENT_MAP: Record<string, [boolean, boolean, boolean, boolean, boolean, 
 function LcdDigit({ digit }: { digit: string }) {
   const [a, b, c, d, e, f, g] = SEGMENT_MAP[digit] ?? SEGMENT_MAP["0"];
   const ON = "#FFFFFF";
-  const OFF = "rgba(255,255,255,0.10)";
+  const OFF = "rgba(120, 130, 140, 0.18)";
 
   return (
     <svg viewBox="0 0 51 82" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="block h-full w-full">
       <defs>
         <linearGradient id="lcdBg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#F7F8FA" />
-          <stop offset="55%" stopColor="#C9CDD2" />
-          <stop offset="100%" stopColor="#8B939B" />
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="50%" stopColor="#E2E5E9" />
+          <stop offset="100%" stopColor="#A8B0B8" />
         </linearGradient>
       </defs>
       <rect x="0" y="0" width="51" height="82" rx="4" fill="url(#lcdBg)" />
       {/* segment a — top horizontal */}
-      <polygon points="11,8 40,8 36,12 15,12" fill={a ? ON : OFF} />
+      <polygon points="11,6 40,6 35,12 16,12" fill={a ? ON : OFF} />
       {/* segment b — top right vertical */}
-      <polygon points="42,10 42,38 38,41 38,14" fill={b ? ON : OFF} />
+      <polygon points="42,8 42,38 37,40 37,13" fill={b ? ON : OFF} />
       {/* segment c — bottom right vertical */}
-      <polygon points="42,44 42,72 38,68 38,41" fill={c ? ON : OFF} />
+      <polygon points="42,44 42,74 37,69 37,42" fill={c ? ON : OFF} />
       {/* segment d — bottom horizontal */}
-      <polygon points="11,74 40,74 36,70 15,70" fill={d ? ON : OFF} />
+      <polygon points="11,76 40,76 35,70 16,70" fill={d ? ON : OFF} />
       {/* segment e — bottom left vertical */}
-      <polygon points="9,44 9,72 13,68 13,41" fill={e ? ON : OFF} />
+      <polygon points="9,44 9,74 14,69 14,42" fill={e ? ON : OFF} />
       {/* segment f — top left vertical */}
-      <polygon points="9,10 9,38 13,41 13,14" fill={f ? ON : OFF} />
+      <polygon points="9,8 9,38 14,40 14,13" fill={f ? ON : OFF} />
       {/* segment g — middle horizontal */}
-      <polygon points="13,41 15,38 36,38 38,41 36,44 15,44" fill={g ? ON : OFF} />
+      <polygon points="14,41 16,38 35,38 37,41 35,44 16,44" fill={g ? ON : OFF} />
     </svg>
   );
 }

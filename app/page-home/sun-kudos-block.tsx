@@ -4,47 +4,44 @@ import Link from "next/link";
 export default function SunKudosBlock() {
   return (
     <section className="w-full bg-[#00101A] py-20 px-4 md:px-18 lg:px-36 overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        <div className="relative rounded-2xl overflow-hidden min-h-[360px] flex flex-col md:flex-row">
-          {/* Background artwork (right side) */}
-          <div className="absolute inset-0 z-0">
+      <div className="mx-auto max-w-[1224px]">
+        <div className="relative overflow-hidden rounded-[16px] bg-[#0F0F0F] min-h-[500px] flex">
+          {/* Right-side Sun* + KUDOS branded wordmark */}
+          <div className="pointer-events-none absolute inset-y-0 right-0 hidden lg:flex items-center justify-end pr-16 z-[1]">
             <Image
-              src="/kudos-bg.png"
+              src="/kudos-wordmark.png"
               alt=""
-              fill
-              className="object-cover object-right"
-              sizes="100vw"
-            />
-            {/* Gradient overlay so left-side text is readable */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(90deg, #00101A 40%, rgba(0,16,26,0.6) 70%, transparent 100%)",
-              }}
+              width={420}
+              height={86}
+              className="h-auto w-[280px] xl:w-[420px] opacity-95"
             />
           </div>
 
-          {/* Text content */}
-          <div className="relative z-10 flex flex-col justify-center gap-5 p-8 md:p-12 lg:py-16 lg:pl-24 max-w-xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/40">
+          {/* Text content on the left */}
+          <div className="relative z-10 flex flex-col justify-center gap-8 p-8 md:p-12 lg:py-16 lg:pl-24 max-w-[520px]">
+            <p className="text-2xl font-bold leading-[32px] text-white">
               Phong trào ghi nhận
             </p>
 
-            {/* Sun* Kudos title */}
-            <h2 className="text-4xl md:text-5xl font-bold text-white">
+            <h2
+              className="text-4xl md:text-[57px] md:leading-[64px] font-bold text-[#FFEA9E]"
+              style={{ letterSpacing: "-0.25px" }}
+            >
               Sun* Kudos
             </h2>
 
-            {/* Description */}
-            {/* TODO: Verify exact Vietnamese text against Figma design strip 4 */}
-            <p className="text-base text-white/70 leading-relaxed">
-              Không chỉ đơn giản là những lời khen ngợi, Sun* Kudos là phong trào ghi nhận và lan toả năng lượng tích
-              cực trong toàn tổ chức. Mỗi lời cảm ơn, mỗi sự ghi nhận — dù lớn hay nhỏ — đều có ý nghĩa trong hành
-              trình xây dựng văn hoá làm việc nơi mọi đóng góp đều được trân trọng.
+            <p
+              className="text-base font-bold text-white"
+              style={{ lineHeight: "24px", letterSpacing: "0.5px" }}
+            >
+              <span className="block uppercase">Điểm mới của SAA 2025</span>
+              Hoạt động ghi nhận và cảm ơn đồng nghiệp – lần đầu tiên được diễn ra
+              dành cho tất cả Sunner. Hoạt động sẽ được triển khai vào tháng 11/2025,
+              khuyến khích người Sun* chia sẻ những lời ghi nhận, cảm ơn đồng nghiệp
+              trên hệ thống do BTC công bố. Đây sẽ là chất liệu để Hội đồng Heads
+              tham khảo trong quá trình lựa chọn người đạt giải.
             </p>
 
-            {/* CTA */}
             <Link
               href="/sun-kudos"
               className="self-start mt-2 px-8 py-3 rounded-full text-sm font-bold text-[#00101A] bg-[#FFEA9E] hover:bg-[#ffe47a] transition-colors"
