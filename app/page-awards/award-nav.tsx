@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { TargetIcon } from "./award-icons";
 
 export interface AwardNavItem {
@@ -20,9 +21,10 @@ const ACTIVE_TEXT_SHADOW =
   "0 4px 4px rgba(0,0,0,0.25), 0 0 6px #FAE287";
 
 export default function AwardNav({ items, activeId, onSelect }: AwardNavProps) {
+  const t = useTranslations("AwardsGrid");
   return (
     <nav
-      aria-label="Hệ thống giải thưởng"
+      aria-label={t("navAriaLabel")}
       className="sticky top-20 z-30 bg-[#00101A] py-3 -my-3 lg:top-28 lg:py-0 lg:my-0 lg:self-start"
     >
       {/* Desktop: vertical list — Figma C_Menu list (313:8459): 178px wide, 16px gap, items 16px padded */}

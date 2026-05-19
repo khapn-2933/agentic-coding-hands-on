@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import CountdownTile from "../page-home/countdown-tile";
 
 export interface PrelaunchCountdownProps {
@@ -32,6 +33,8 @@ function computeCountdown(eventStartAt: string): CountdownValues {
 }
 
 export default function PrelaunchCountdown({ eventStartAt }: PrelaunchCountdownProps) {
+  const tCountdown = useTranslations("Countdown");
+  const tHero = useTranslations("Hero");
   const [countdown, setCountdown] = useState<CountdownValues>({
     days: "00",
     hours: "00",
@@ -51,12 +54,12 @@ export default function PrelaunchCountdown({ eventStartAt }: PrelaunchCountdownP
   return (
     <section className="flex flex-col items-center gap-[60px]">
       <h1 className="text-4xl font-bold leading-[48px] text-white text-center">
-        Sự kiện sẽ bắt đầu sau
+        {tCountdown("willStartIn")}
       </h1>
       <div className="flex items-start gap-10 md:gap-[60px]">
-        <CountdownTile value={countdown.days} label="DAYS" />
-        <CountdownTile value={countdown.hours} label="HOURS" />
-        <CountdownTile value={countdown.minutes} label="MINUTES" />
+        <CountdownTile value={countdown.days} label={tHero("days")} />
+        <CountdownTile value={countdown.hours} label={tHero("hours")} />
+        <CountdownTile value={countdown.minutes} label={tHero("minutes")} />
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 export interface AwardCardProps {
   slug: string;
@@ -29,7 +30,8 @@ function ArrowUpRight() {
   );
 }
 
-export default function AwardCard({ slug, imageSrc, title, description }: AwardCardProps) {
+export default async function AwardCard({ slug, imageSrc, title, description }: AwardCardProps) {
+  const t = await getTranslations("AwardCard");
   return (
     <article className="flex flex-col gap-6">
       <div
@@ -62,9 +64,9 @@ export default function AwardCard({ slug, imageSrc, title, description }: AwardC
       <Link
         href={`/awards#${slug}`}
         className="inline-flex items-center gap-1 self-start text-base font-medium text-white tracking-[0.15px] hover:underline transition-colors px-1"
-        aria-label={`Chi tiết về ${title}`}
+        aria-label={t("detailsAriaLabel", { title })}
       >
-        Chi tiết
+        {t("details")}
         <ArrowUpRight />
       </Link>
     </article>

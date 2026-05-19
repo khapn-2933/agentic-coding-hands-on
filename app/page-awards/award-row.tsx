@@ -6,8 +6,10 @@ export interface AwardRowProps {
   imageSrc: string;
   title: string;
   description: string;
+  countLabel: string;
   count: string;
   countUnit: string;
+  valueLabel: string;
   value: string;
   valueNote?: string;
   secondValue?: string;
@@ -25,8 +27,10 @@ export default function AwardRow({
   imageSrc,
   title,
   description,
+  countLabel,
   count,
   countUnit,
+  valueLabel,
   value,
   valueNote,
   secondValue,
@@ -84,7 +88,7 @@ export default function AwardRow({
         <div className="flex items-center gap-4 flex-wrap">
           <DiamondIcon className="shrink-0 text-[#FFEA9E]" />
           <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
-            Số lượng giải thưởng:
+            {countLabel}
           </span>
           <span className="inline-flex items-center gap-2">
             <span className="text-2xl font-bold leading-8 text-white">{count}</span>
@@ -100,7 +104,7 @@ export default function AwardRow({
         <div className="flex items-center gap-4 flex-wrap">
           <LicenseIcon className="shrink-0 text-[#FFEA9E]" />
           <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
-            Giá trị giải thưởng:
+            {valueLabel}
           </span>
           <span className="text-2xl font-bold leading-8 text-white">{value}</span>
           {valueNote && (
@@ -116,7 +120,7 @@ export default function AwardRow({
             <div className="flex items-center gap-4 flex-wrap">
               <LicenseIcon className="shrink-0 text-[#FFEA9E]" />
               <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
-                Giá trị giải thưởng:
+                {valueLabel}
               </span>
               <span className="text-2xl font-bold leading-8 text-white">
                 {secondValue}

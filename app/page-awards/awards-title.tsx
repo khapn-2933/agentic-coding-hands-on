@@ -1,6 +1,8 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 
-export default function AwardsTitle() {
+export default async function AwardsTitle() {
+  const t = await getTranslations("AwardsPage");
   return (
     <>
       {/* Keyvisual strip — 1440×547 per Figma node 313:8437. Tree art bg + ROOT FURTHER overlay. */}
@@ -48,7 +50,7 @@ export default function AwardsTitle() {
       <section className="w-full px-4 md:px-18 lg:px-36 pt-4 pb-4 lg:pb-6">
         <div className="max-w-7xl mx-auto flex flex-col gap-4">
           <p className="text-2xl font-bold leading-8 text-white text-center">
-            Sun* Annual Awards 2025
+            {t("subtitle")}
           </p>
           <div className="h-px w-full bg-[#2E3940]" />
           <div className="flex justify-center">
@@ -56,7 +58,7 @@ export default function AwardsTitle() {
               className="text-4xl md:text-5xl lg:text-[57px] lg:leading-[64px] font-bold text-[#FFEA9E] text-left"
               style={{ letterSpacing: "-0.25px" }}
             >
-              Hệ thống giải thưởng SAA 2025
+              {t("title")}
             </h1>
           </div>
         </div>

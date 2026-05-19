@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useCloseOnOutside } from "@/lib/use-close-on-outside";
 
 export interface AccountMenuProps {
@@ -52,6 +53,7 @@ function ChevronDown({ open }: { open: boolean }) {
 }
 
 export default function AccountMenu({ email, isAdmin = false }: AccountMenuProps) {
+  const t = useTranslations("AccountMenu");
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   useCloseOnOutside(containerRef, open, () => setOpen(false));
@@ -66,7 +68,7 @@ export default function AccountMenu({ email, isAdmin = false }: AccountMenuProps
         className="inline-flex items-center gap-2 px-2 py-1.5 rounded-full border border-white/20 bg-white/10 text-white text-sm font-medium hover:bg-white/15 transition-colors cursor-pointer"
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Account menu"
+        aria-label={t("ariaLabel")}
       >
         <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#FFEA9E] text-[#00101A] text-xs font-bold leading-none">
           {initials}
@@ -78,7 +80,7 @@ export default function AccountMenu({ email, isAdmin = false }: AccountMenuProps
       {open && (
         <div className="absolute right-0 mt-2 w-52 rounded-lg border border-white/15 bg-[#0B0F12] shadow-xl overflow-hidden z-50">
           <div className="px-4 py-3 border-b border-white/10">
-            <p className="text-xs text-white/40">Tài khoản</p>
+            <p className="text-xs text-white/40">{t("account")}</p>
             <p className="text-sm font-medium text-white truncate">{email}</p>
           </div>
 
@@ -90,7 +92,7 @@ export default function AccountMenu({ email, isAdmin = false }: AccountMenuProps
                 className="flex items-center gap-2 px-4 py-2.5 text-sm text-white hover:bg-white/5 transition-colors"
               >
                 <UserCircleIcon />
-                Profile
+                {t("profile")}
               </a>
             </li>
 
@@ -146,7 +148,7 @@ export default function AccountMenu({ email, isAdmin = false }: AccountMenuProps
                       strokeWidth="1.5"
                     />
                   </svg>
-                  Admin Dashboard
+                  {t("adminDashboard")}
                 </a>
               </li>
             )}
@@ -180,7 +182,7 @@ export default function AccountMenu({ email, isAdmin = false }: AccountMenuProps
                       strokeLinejoin="round"
                     />
                   </svg>
-                  Sign out
+                  {t("signOut")}
                 </button>
               </form>
             </li>
