@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "DSEG7 Classic";
+  font-style: normal;
+  font-display: block;
+  font-weight: 400;
+  src: url("/fonts/dseg7-classic-latin-400-normal.woff2") format("woff2"),
+       url("/fonts/dseg7-classic-latin-400-normal.woff") format("woff");
+}
+
 :root {
   --background: #00101A;
   --foreground: #ffffff;

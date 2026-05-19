@@ -15,7 +15,10 @@ const montserratAlternates = Montserrat_Alternates({
 });
 
 export const metadata: Metadata = {
-  title: "SAA 2025 — Sign in",
+  title: {
+    default: "SAA 2025 — Root Further",
+    template: "%s · SAA 2025",
+  },
   description: "Sun Annual Awards 2025 — Root Further",
 };
 

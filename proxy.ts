@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/proxy-client";
 
+// Public paths accessible without authentication. Everything else (including
+// the homepage `/` and all stub routes) requires a signed-in user.
 const PUBLIC_PATHS = new Set(["/login"]);
 const AUTH_API_PREFIX = "/auth/";
 
@@ -30,5 +32,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|fonts/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|woff|woff2|ttf|otf)$).*)"],
 };

@@ -45,3 +45,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# Guard against misplaced agent memory
+public/.claude/
+
+# Playwright MCP local cache
+.playwright-mcp/
