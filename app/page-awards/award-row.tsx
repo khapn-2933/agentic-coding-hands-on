@@ -9,8 +9,10 @@ export interface AwardRowProps {
   countUnit: string;
   value: string;
   valueNote?: string;
-  /** Determines image side: even = right, odd = left. */
-  index: number;
+  secondValue?: string;
+  secondValueNote?: string;
+  /** Explicit per-row image side per Figma; design isn't strict alternation. */
+  imageSide: "left" | "right";
   priority?: boolean;
 }
 
@@ -23,10 +25,12 @@ export default function AwardRow({
   countUnit,
   value,
   valueNote,
-  index,
+  secondValue,
+  secondValueNote,
+  imageSide,
   priority = false,
 }: AwardRowProps) {
-  const imageOnRight = index % 2 === 0;
+  const imageOnRight = imageSide === "right";
 
   return (
     <section
@@ -61,7 +65,7 @@ export default function AwardRow({
           {title}
         </h3>
         <p
-          className="text-base font-normal text-white"
+          className="text-base font-normal text-white whitespace-pre-line"
           style={{ lineHeight: "24px", letterSpacing: "0.5px" }}
         >
           {description}
@@ -80,6 +84,21 @@ export default function AwardRow({
               <span className="text-base text-white/80">{valueNote}</span>
             )}
           </div>
+          {secondValue && (
+            <>
+              <div className="flex items-center gap-3 text-xs uppercase tracking-wide text-white/40">
+                <span>Hoặc</span>
+                <span className="flex-1 h-px bg-white/10" />
+              </div>
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-base text-white/80">Giá trị giải thưởng:</span>
+                <span className="text-2xl font-bold text-[#FFEA9E]">{secondValue}</span>
+                {secondValueNote && (
+                  <span className="text-base text-white/80">{secondValueNote}</span>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>

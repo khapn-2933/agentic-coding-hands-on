@@ -5,33 +5,25 @@ export default function SunKudosBlock() {
   return (
     <section className="w-full bg-[#00101A] py-20 px-4 md:px-18 lg:px-36 overflow-hidden">
       <div className="mx-auto max-w-[1224px]">
-        <div className="relative overflow-hidden rounded-[16px] bg-[#0F0F0F] min-h-[500px] flex">
-          {/* Warm gold glow on the right side, evoking the ribbon decoration in the design. */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-0 w-2/3"
-            style={{
-              background:
-                "radial-gradient(circle at 70% 50%, rgba(212, 175, 89, 0.25) 0%, rgba(212, 175, 89, 0.08) 35%, transparent 70%)",
-            }}
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute top-0 right-0 h-full w-1/2"
-            style={{
-              background:
-                "linear-gradient(115deg, transparent 0%, rgba(255, 215, 130, 0.06) 40%, rgba(255, 215, 130, 0.12) 60%, transparent 100%)",
-            }}
+        {/* Card 1120×500 per Figma SunKudos group; real bg ships the gold-ribbon artwork. */}
+        <div className="relative overflow-hidden rounded-[16px] min-h-[500px]">
+          <Image
+            src="/kudos-bg.png"
+            alt=""
+            fill
+            sizes="(max-width: 1024px) 100vw, 1120px"
+            className="object-cover object-right pointer-events-none select-none"
+            priority={false}
           />
 
-          {/* Right-side Sun* + KUDOS branded wordmark */}
+          {/* Sun* + KUDOS wordmark — anchored over the ribbon area (right side of card). */}
           <div className="pointer-events-none absolute inset-y-0 right-0 hidden lg:flex items-center justify-end pr-16 z-[1]">
             <Image
               src="/kudos-wordmark.png"
               alt=""
-              width={420}
-              height={86}
-              className="h-auto w-[280px] xl:w-[420px] opacity-95"
+              width={364}
+              height={72}
+              className="h-auto w-[260px] xl:w-[364px]"
             />
           </div>
 
