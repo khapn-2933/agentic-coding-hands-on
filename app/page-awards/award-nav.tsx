@@ -1,5 +1,7 @@
 "use client";
 
+import { TargetIcon } from "./award-icons";
+
 export interface AwardNavItem {
   id: string;
   label: string;
@@ -11,6 +13,12 @@ export interface AwardNavProps {
   onSelect: (id: string) => void;
 }
 
+// Per Figma C_Menu list: each item is a 14px Montserrat 700 link with a
+// 24x24 Target icon and 4px gap, padded 16px. Active items get cream
+// color + 1px bottom border + warm glow text-shadow.
+const ACTIVE_TEXT_SHADOW =
+  "0 4px 4px rgba(0,0,0,0.25), 0 0 6px #FAE287";
+
 export default function AwardNav({ items, activeId, onSelect }: AwardNavProps) {
   return (
     <nav
@@ -18,7 +26,7 @@ export default function AwardNav({ items, activeId, onSelect }: AwardNavProps) {
       className="sticky top-20 z-30 bg-[#00101A] py-3 -my-3 lg:top-28 lg:py-0 lg:my-0 lg:self-start"
     >
       {/* Desktop: vertical list */}
-      <ul className="hidden lg:flex lg:flex-col lg:gap-5">
+      <ul className="hidden lg:flex lg:flex-col">
         {items.map(({ id, label }) => {
           const isActive = activeId === id;
           return (
@@ -27,12 +35,14 @@ export default function AwardNav({ items, activeId, onSelect }: AwardNavProps) {
                 type="button"
                 onClick={() => onSelect(id)}
                 aria-current={isActive ? "true" : undefined}
-                className={`text-left text-base transition-colors duration-150 ${
+                className={`flex items-center gap-1 px-4 py-4 text-sm font-bold tracking-[0.25px] leading-5 transition-colors duration-150 ${
                   isActive
-                    ? "text-[#FFEA9E] font-semibold underline underline-offset-4"
+                    ? "text-[#FFEA9E] border-b border-[#FFEA9E]"
                     : "text-white/70 hover:text-white"
                 }`}
+                style={isActive ? { textShadow: ACTIVE_TEXT_SHADOW } : undefined}
               >
+                <TargetIcon className="shrink-0" />
                 {label}
               </button>
             </li>
@@ -50,12 +60,13 @@ export default function AwardNav({ items, activeId, onSelect }: AwardNavProps) {
                 type="button"
                 onClick={() => onSelect(id)}
                 aria-current={isActive ? "true" : undefined}
-                className={`whitespace-nowrap px-4 py-2 rounded-full text-sm transition-colors duration-150 ${
+                className={`inline-flex items-center gap-1 whitespace-nowrap px-4 py-2 rounded-[4px] text-sm font-bold tracking-[0.25px] transition-colors duration-150 ${
                   isActive
-                    ? "bg-[#FFEA9E] text-[#00101A] font-semibold"
+                    ? "bg-[#FFEA9E] text-[#00101A]"
                     : "bg-white/5 text-white/70 hover:bg-white/10"
                 }`}
               >
+                <TargetIcon className="shrink-0" />
                 {label}
               </button>
             </li>
