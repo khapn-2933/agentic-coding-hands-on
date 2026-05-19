@@ -52,3 +52,8 @@ public/.claude/
 
 # Playwright MCP local cache
 .playwright-mcp/
+
+# Claude Code runtime artifacts (logs, locks, per-user permission allowlist)
+.claude/hooks/.logs/
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
