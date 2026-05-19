@@ -54,9 +54,25 @@ export default function SunKudosBlock() {
 
             <Link
               href="/sun-kudos"
-              className="self-start mt-2 px-8 py-3 rounded-full text-sm font-bold text-[#00101A] bg-[#FFEA9E] hover:bg-[#ffe47a] transition-colors"
+              className="self-start mt-2 inline-flex items-center gap-2 px-4 py-4 rounded-[4px] text-sm font-bold text-[#00101A] bg-[#FFEA9E] hover:bg-[#ffe47a] transition-colors"
             >
               Chi tiết
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7 17L17 7M8 7h9v9"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </Link>
           </div>
         </div>
