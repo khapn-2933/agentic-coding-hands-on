@@ -108,7 +108,7 @@ export default function AwardsSection() {
 
   return (
     <section className="w-full bg-[#00101A] py-16 px-4 md:px-18 lg:px-36">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10 lg:gap-16">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[178px_1fr] gap-10 lg:gap-16">
         <div className="lg:pt-12">
           <AwardNav items={NAV_ITEMS} activeId={activeId} onSelect={handleSelect} />
         </div>
@@ -127,7 +127,7 @@ export default function AwardsSection() {
               valueNote={award.valueNote || undefined}
               secondValue={"secondValue" in award ? award.secondValue : undefined}
               secondValueNote={"secondValueNote" in award ? award.secondValueNote : undefined}
-              imageSide={award.imageSide}
+              imageSide={index % 2 === 0 ? "right" : "left"}
               priority={index === 0}
             />
           ))}

@@ -25,17 +25,17 @@ export default function AwardNav({ items, activeId, onSelect }: AwardNavProps) {
       aria-label="Hệ thống giải thưởng"
       className="sticky top-20 z-30 bg-[#00101A] py-3 -my-3 lg:top-28 lg:py-0 lg:my-0 lg:self-start"
     >
-      {/* Desktop: vertical list */}
-      <ul className="hidden lg:flex lg:flex-col">
+      {/* Desktop: vertical list — Figma C_Menu list (313:8459): 178px wide, 16px gap, items 16px padded */}
+      <ul className="hidden lg:flex lg:flex-col lg:gap-4 lg:w-[178px]">
         {items.map(({ id, label }) => {
           const isActive = activeId === id;
           return (
-            <li key={id}>
+            <li key={id} className="flex">
               <button
                 type="button"
                 onClick={() => onSelect(id)}
                 aria-current={isActive ? "true" : undefined}
-                className={`flex items-center gap-1 px-4 py-4 text-sm font-bold tracking-[0.25px] leading-5 transition-colors duration-150 ${
+                className={`inline-flex items-center gap-1 px-4 py-4 rounded-[4px] text-sm font-bold tracking-[0.25px] leading-5 text-left transition-colors duration-150 ${
                   isActive
                     ? "text-[#FFEA9E] border-b border-[#FFEA9E]"
                     : "text-white/70 hover:text-white"
