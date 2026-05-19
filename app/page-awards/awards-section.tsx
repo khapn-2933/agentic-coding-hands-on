@@ -127,7 +127,7 @@ export default function AwardsSection() {
               valueNote={award.valueNote || undefined}
               secondValue={"secondValue" in award ? award.secondValue : undefined}
               secondValueNote={"secondValueNote" in award ? award.secondValueNote : undefined}
-              imageSide={index % 2 === 0 ? "right" : "left"}
+              imageSide={index % 2 === 0 ? "left" : "right"}
               priority={index === 0}
             />
           ))}
