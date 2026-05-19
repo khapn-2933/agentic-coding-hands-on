@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-export default function SunKudosBlock() {
+export default async function SunKudosBlock() {
+  const t = await getTranslations("Kudos");
   return (
     <section className="w-full bg-[#00101A] py-20 px-4 md:px-18 lg:px-36 overflow-hidden">
       <div className="mx-auto max-w-[1224px]">
@@ -32,33 +34,29 @@ export default function SunKudosBlock() {
           {/* Text content on the left */}
           <div className="relative z-10 flex flex-col justify-center gap-8 p-8 md:p-12 lg:py-16 lg:pl-24 max-w-[520px]">
             <p className="text-2xl font-bold leading-[32px] text-white">
-              Phong trào ghi nhận
+              {t("movementLabel")}
             </p>
 
             <h2
               className="text-4xl md:text-[57px] md:leading-[64px] font-bold text-[#FFEA9E]"
               style={{ letterSpacing: "-0.25px" }}
             >
-              Sun* Kudos
+              {t("title")}
             </h2>
 
             <p
               className="text-base font-bold text-white"
               style={{ lineHeight: "24px", letterSpacing: "0.5px" }}
             >
-              <span className="block uppercase">Điểm mới của SAA 2025</span>
-              Hoạt động ghi nhận và cảm ơn đồng nghiệp – lần đầu tiên được diễn ra
-              dành cho tất cả Sunner. Hoạt động sẽ được triển khai vào tháng 11/2025,
-              khuyến khích người Sun* chia sẻ những lời ghi nhận, cảm ơn đồng nghiệp
-              trên hệ thống do BTC công bố. Đây sẽ là chất liệu để Hội đồng Heads
-              tham khảo trong quá trình lựa chọn người đạt giải.
+              <span className="block uppercase">{t("newOf2025")}</span>
+              {t("description")}
             </p>
 
             <Link
               href="/sun-kudos"
               className="self-start mt-2 inline-flex items-center gap-2 px-4 py-4 rounded-[4px] text-sm font-bold text-[#00101A] bg-[#FFEA9E] hover:bg-[#ffe47a] transition-colors"
             >
-              Chi tiết
+              {t("detailsButton")}
               <svg
                 width="24"
                 height="24"

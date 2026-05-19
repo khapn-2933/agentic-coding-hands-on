@@ -1,0 +1,119 @@
+{
+  "Header": {
+    "navAbout": "About SAA 2025",
+    "navAwards": "Award Information",
+    "navKudos": "Sun* Kudos",
+    "signIn": "Sign in"
+  },
+  "Footer": {
+    "navAbout": "About SAA 2025",
+    "navAwards": "Award Information",
+    "navKudos": "Sun* Kudos",
+    "navStandards": "General Standards",
+    "copyright": "Copyright © 2025 Sun*",
+    "ariaLabel": "Footer navigation"
+  },
+  "Hero": {
+    "comingSoon": "Coming soon",
+    "days": "DAYS",
+    "hours": "HOURS",
+    "minutes": "MINUTES",
+    "time": "Date:",
+    "location": "Venue:",
+    "locationValue": "Âu Cơ Art Center",
+    "livestreamNote": "Broadcast live via Livestream",
+    "aboutAwards": "ABOUT AWARDS",
+    "aboutKudos": "ABOUT KUDOS"
+  },
+  "RootFurther": {
+    "para1": "Faced with the whirlwind of change in the AI era and ever-rising expectations from clients, Sun* has chosen a strategy of diversifying capabilities — not only striving to be the very best in our field, but reaching for a higher goal where every Sunner becomes a “problem-solver”: an expert at resolving every challenge and finding answers to every problem of our projects, our clients, and society.\nInspired by this diversity of capability, agile growth, and the spirit of digging deeper to break through in the AI age, “Root Further” has been chosen as the official theme of the Sun* Annual Awards 2025.\nBeyond its surface meaning, “Root Further” is our journey to constantly reach further, take root deeper, and touch the hidden “geological” layers where we continue to thrive, rise, and feed the ever-burning passion of Sun* people to create value. Like a root system pushing relentlessly into the earth, weaving through every “sediment” to absorb the very finest essence, Sun* people are “absorbing” nutrients from the era and the challenges of the market to renew ourselves every day, expand our capabilities, and root ourselves firmly into the AI era — a brand-new “geological” layer that is complex and unpredictable, yet teeming with potential and opportunity.",
+    "quote": " “A tree with deep roots fears no storm”\n (Vietnamese: Cây sâu bén rễ, bão giông chẳng nề)",
+    "para2": "In the face of storms, only trees with strong roots can stand firm. An organization of individuals confident in their diverse capabilities, ready to create, ready to take on challenges, and in command of change is one that not only stands steady through volatility, but turns every advantage to its favor and conquers the trials of the times. More than just a name for a new chapter in our organizational journey, “Root Further” is a call to courage — encouraging each of us to believe in ourselves, to dig deep, to unlock every potential, to dare to break our limits, and to dare to become the most versatile and excellent version of ourselves. In the AI era, diverse capability and the ability to harness the strength of the moment are the prerequisites for endurance.\nNo one knows how many mysterious “geological” layers lie buried in the depths of the technology industry and modern market. We only know that once “Root Further” has become a rooted spirit, we will not fear — instead we will feel excited before any unknown territory on the journey ahead. Because we believe that within those infinite expanses lie countless wonders, and opportunities to rise, awaiting us."
+  },
+  "Kudos": {
+    "movementLabel": "Recognition movement",
+    "title": "Sun* Kudos",
+    "newOf2025": "NEW IN SAA 2025",
+    "description": "An activity to recognize and thank colleagues — held for the first time for all Sunners. Launching in November 2025, the program invites Sun* people to share recognition and thanks with their colleagues on the platform announced by the Organizing Committee. These messages will serve as reference material for the Heads Council in selecting the awardees.",
+    "detailsButton": "Details"
+  },
+  "AwardsPage": {
+    "subtitle": "Sun* Annual Awards 2025",
+    "title": "SAA 2025 Award System",
+    "countLabel": "Number of awards:",
+    "valueLabel": "Award value:",
+    "unitIndividual": "Individual",
+    "unitTeam": "Team",
+    "unitIndividualOrTeam": "Individual or Team",
+    "valueNoteEach": "per award",
+    "valueNoteIndividual": "for individual award",
+    "valueNoteTeam": "for team award"
+  },
+  "Awards": {
+    "topTalent": {
+      "label": "Top Talent",
+      "title": "Top Talent",
+      "description": "The Top Talent award honors individuals of all-round excellence — those who continually elevate their expertise, work with drive, deliver outstanding performance, generate value beyond expectations, and positively influence their teammates and teams. They are emblems of dedication, of relentless learning, and of the ability to inspire, motivate, and spread the best of Sun*'s values."
+    },
+    "topProject": {
+      "label": "Top Project",
+      "title": "Top Project",
+      "description": "The Top Project award honors outstanding projects with exceptional business results, high operational efficiency, and sustainable value delivery. Their members carry both professional work ethic and the power to inspire and spread Sun*'s best values. They are the strength and faith that drive the project to new heights, conquered together."
+    },
+    "topProjectLeader": {
+      "label": "Top Project Leader",
+      "title": "Top Project Leader",
+      "description": "The Top Project Leader award honors outstanding project leaders — those who combine solid managerial capability, powerful inspirational leadership, and an \"Aim High – Be Agile\" mindset across every problem and context. Under their guidance, members not only overcome challenges and achieve their goals together, but also keep alight the flame of enthusiasm and Wasshoi spirit, growing into a finer — and happier — version of themselves."
+    },
+    "bestManager": {
+      "label": "Best Manager",
+      "title": "Best Manager",
+      "description": "The Best Manager award honors exemplary leaders — those who guide their teams to produce results beyond expectations, with clear impact on business performance and the sustainable growth of the organization. Under their leadership, teams feel valued, have space to develop, and journey together with capability, creativity, and a belief in what truly benefits clients."
+    },
+    "signature2025": {
+      "label": "Signature 2025 - Creator",
+      "title": "Signature 2025 - Creator",
+      "description": "The Signature award honors individuals or teams who have clearly demonstrated a proactive mindset and inspired talented people, spreading values across the wider community.\n\nIn 2025, the Signature award honors the Creator — an individual or a team who carries a proactive mindset and inspires others. More than content makers, they bring meaningful value to projects, clients, and the organization."
+    },
+    "mvp": {
+      "label": "MVP",
+      "title": "MVP (Most Valuable Person)",
+      "description": "The MVP award honors the most outstanding individual of the year — a defining figure representing the whole of Sun*. They have shown exceptional capability, enduring dedication, and far-reaching influence, leaving a powerful mark on Sun*'s journey throughout the year. More than performance and results, the MVP embodies every quality of a true Sun* person, while carrying the responsibility to spread, lead, and lift the spiritual fullness and stature of the Sun* community."
+    }
+  },
+  "AwardCard": {
+    "details": "Details",
+    "detailsAriaLabel": "Details about {title}"
+  },
+  "AwardsGrid": {
+    "subtitle": "Sun* annual awards 2025",
+    "title": "Award system",
+    "navAriaLabel": "Award system",
+    "shortTopTalent": "Honoring the top individuals who excel across every dimension",
+    "shortTopProject": "Honoring the standout projects, exceptional in every aspect of operation",
+    "shortTopProjectLeader": "Honoring project managers who lead their projects to great achievements",
+    "shortBestManager": "Honoring managers with strong leadership and team-building capability",
+    "shortSignature2025": "Honoring the content creators who shape the SAA 2025 brand",
+    "shortMvp": "Honoring the individual with all-round capability and far-reaching influence"
+  },
+  "Countdown": {
+    "willStartIn": "Event will start in"
+  },
+  "Stub": {
+    "comingSoon": "Coming soon",
+    "subtitle": "This page is under construction. Please check back later.",
+    "backHome": "Back to home"
+  },
+  "AccountMenu": {
+    "account": "Account",
+    "profile": "Profile",
+    "adminDashboard": "Admin Dashboard",
+    "signOut": "Sign out",
+    "ariaLabel": "Account menu"
+  },
+  "LanguageSelector": {
+    "ariaLabel": "Select language",
+    "vi": "VN",
+    "en": "EN"
+  }
+}

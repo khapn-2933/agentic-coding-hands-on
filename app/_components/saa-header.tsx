@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import LanguageSelector from "./language-selector";
 import NotificationBell from "./notification-bell";
 import AccountMenu from "./account-menu";
@@ -9,14 +10,15 @@ export interface SaaHeaderProps {
   activePath?: "about-saa" | "awards" | "sun-kudos" | null;
 }
 
-const NAV_LINKS = [
-  { label: "About SAA 2025", href: "/", key: "about-saa" as const },
-  { label: "Award Information", href: "/awards", key: "awards" as const },
-  { label: "Sun* Kudos", href: "/sun-kudos", key: "sun-kudos" as const },
-];
-
-export default function SaaHeader({ user, activePath }: SaaHeaderProps) {
+export default async function SaaHeader({ user, activePath }: SaaHeaderProps) {
+  const t = await getTranslations("Header");
   const isAdmin = user?.role === "admin";
+
+  const NAV_LINKS = [
+    { label: t("navAbout"), href: "/", key: "about-saa" as const },
+    { label: t("navAwards"), href: "/awards", key: "awards" as const },
+    { label: t("navKudos"), href: "/sun-kudos", key: "sun-kudos" as const },
+  ];
 
   return (
     <header
@@ -70,7 +72,7 @@ export default function SaaHeader({ user, activePath }: SaaHeaderProps) {
                 href="/login"
                 className="px-4 py-2 text-sm font-semibold text-[#00101A] bg-[#FFEA9E] rounded-full hover:bg-[#ffe47a] transition-colors"
               >
-                Sign in
+                {t("signIn")}
               </Link>
             </>
           )}

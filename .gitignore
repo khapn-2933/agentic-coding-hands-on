@@ -57,3 +57,8 @@ public/.claude/
 .claude/hooks/.logs/
 .claude/scheduled_tasks.lock
 .claude/settings.local.json
+
+# Verification screenshots produced by Playwright runs
+plans/reports/*.png
+plans/reports/*.jpg
+plans/reports/*.jpeg

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import CountdownTile from "./countdown-tile";
 
 function ArrowUpRightBold() {
@@ -58,6 +59,8 @@ function computeCountdown(eventStartAt: string): CountdownValues {
 }
 
 export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
+  const t = useTranslations("Hero");
+  const locale = useLocale();
   const [countdown, setCountdown] = useState<CountdownValues>({
     days: "00",
     hours: "00",
@@ -80,7 +83,8 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
   const eventDate = (() => {
     const d = new Date(eventStartAt);
     if (isNaN(d.getTime())) return "—";
-    return d.toLocaleDateString("vi-VN", {
+    const bcp47 = locale === "vi" ? "vi-VN" : "en-GB";
+    return d.toLocaleDateString(bcp47, {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -102,14 +106,14 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
         <div className="flex flex-col gap-4">
           {showComingSoon && (
             <p className="text-2xl font-bold leading-[32px] text-white">
-              Coming soon
+              {t("comingSoon")}
             </p>
           )}
 
           <div className="flex items-start gap-10">
-            <CountdownTile size="sm" value={countdown.days} label="DAYS" />
-            <CountdownTile size="sm" value={countdown.hours} label="HOURS" />
-            <CountdownTile size="sm" value={countdown.minutes} label="MINUTES" />
+            <CountdownTile size="sm" value={countdown.days} label={t("days")} />
+            <CountdownTile size="sm" value={countdown.hours} label={t("hours")} />
+            <CountdownTile size="sm" value={countdown.minutes} label={t("minutes")} />
           </div>
         </div>
 
@@ -117,7 +121,7 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
           <div className="flex flex-wrap items-center gap-x-[60px] gap-y-2">
             <p className="flex items-baseline gap-2">
               <span className="text-base font-bold leading-6 tracking-[0.15px] text-white">
-                Thời gian:
+                {t("time")}
               </span>
               <span className="text-2xl font-bold leading-[32px] text-[#FFEA9E]">
                 {eventDate}
@@ -125,15 +129,15 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
             </p>
             <p className="flex items-baseline gap-2">
               <span className="text-base font-bold leading-6 tracking-[0.15px] text-white">
-                Địa điểm:
+                {t("location")}
               </span>
               <span className="text-2xl font-bold leading-[32px] text-[#FFEA9E]">
-                Âu Cơ Art Center
+                {t("locationValue")}
               </span>
             </p>
           </div>
           <p className="text-base font-bold leading-6 tracking-[0.5px] text-white">
-            Tường thuật trực tiếp qua sóng Livestream
+            {t("livestreamNote")}
           </p>
         </div>
 
@@ -142,14 +146,14 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
             href="/awards"
             className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold uppercase tracking-[0.1em] text-[#00101A] bg-[#FFEA9E] hover:bg-[#ffe47a] transition-colors"
           >
-            ABOUT AWARDS
+            {t("aboutAwards")}
             <ArrowUpRightBold />
           </Link>
           <Link
             href="/sun-kudos"
             className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold uppercase tracking-[0.1em] text-white border border-white/60 hover:bg-white/10 transition-colors"
           >
-            ABOUT KUDOS
+            {t("aboutKudos")}
             <ArrowUpRightBold />
           </Link>
         </div>
