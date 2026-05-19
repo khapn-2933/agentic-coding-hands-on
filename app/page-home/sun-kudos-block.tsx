@@ -23,7 +23,9 @@ export default function SunKudosBlock() {
               alt=""
               width={364}
               height={72}
-              className="h-auto w-[260px] xl:w-[364px]"
+              sizes="(min-width: 1280px) 364px, 260px"
+              style={{ height: "auto" }}
+              className="w-[260px] xl:w-[364px]"
             />
           </div>
 
