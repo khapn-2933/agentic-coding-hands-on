@@ -5,6 +5,27 @@ import Image from "next/image";
 import Link from "next/link";
 import CountdownTile from "./countdown-tile";
 
+function ArrowUpRightBold() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5 11l6-6M5 5h6v6"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export interface HeroCountdownProps {
   eventStartAt: string;
 }
@@ -45,6 +66,8 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
   });
 
   useEffect(() => {
+    // Hydrate from real time on mount, then refresh once per minute.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCountdown(computeCountdown(eventStartAt));
     const timer = setInterval(() => {
       setCountdown(computeCountdown(eventStartAt));
@@ -84,9 +107,9 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
           )}
 
           <div className="flex items-start gap-10">
-            <CountdownTile value={countdown.days} label="DAYS" />
-            <CountdownTile value={countdown.hours} label="HOURS" />
-            <CountdownTile value={countdown.minutes} label="MINUTES" />
+            <CountdownTile size="sm" value={countdown.days} label="DAYS" />
+            <CountdownTile size="sm" value={countdown.hours} label="HOURS" />
+            <CountdownTile size="sm" value={countdown.minutes} label="MINUTES" />
           </div>
         </div>
 
@@ -120,14 +143,14 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
             className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold uppercase tracking-[0.1em] text-[#00101A] bg-[#FFEA9E] hover:bg-[#ffe47a] transition-colors"
           >
             ABOUT AWARDS
-            <span aria-hidden="true">↗</span>
+            <ArrowUpRightBold />
           </Link>
           <Link
             href="/sun-kudos"
             className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold uppercase tracking-[0.1em] text-white border border-white/60 hover:bg-white/10 transition-colors"
           >
             ABOUT KUDOS
-            <span aria-hidden="true">↗</span>
+            <ArrowUpRightBold />
           </Link>
         </div>
       </div>

@@ -70,7 +70,7 @@ export default function SunKudosBlock() {
                 <path
                   d="M7 17L17 7M8 7h9v9"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
