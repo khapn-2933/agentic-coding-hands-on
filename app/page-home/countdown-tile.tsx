@@ -40,20 +40,27 @@ const SIZE_CONFIG = {
 function LcdDigit({ digit, cfg }: { digit: string; cfg: (typeof SIZE_CONFIG)[keyof typeof SIZE_CONFIG] }) {
   return (
     <div
-      className="relative flex items-center justify-center overflow-hidden"
-      style={{
-        height: `${cfg.tileH}px`,
-        width: `${cfg.tileW}px`,
-        borderRadius: `${cfg.radius}px`,
-        background:
-          "linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.05) 100%)",
-        border: `${cfg.border} solid #FFEA9E`,
-        backdropFilter: `blur(${cfg.blur}px)`,
-        WebkitBackdropFilter: `blur(${cfg.blur}px)`,
-      }}
+      className="relative flex items-center justify-center"
+      style={{ height: `${cfg.tileH}px`, width: `${cfg.tileW}px` }}
     >
+      {/* Tile bg layer — opacity 0.5 fades both the gradient AND the cream border
+          per Figma Rectangle 1 (I2167:9040;186:2616 / I2268:35141;186:2616). */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 overflow-hidden"
+        style={{
+          borderRadius: `${cfg.radius}px`,
+          background:
+            "linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.10) 100%)",
+          border: `${cfg.border} solid #FFEA9E`,
+          backdropFilter: `blur(${cfg.blur}px)`,
+          WebkitBackdropFilter: `blur(${cfg.blur}px)`,
+          opacity: 0.5,
+        }}
+      />
+      {/* Digit sits above the faded tile at full opacity. */}
       <span
-        className="select-none"
+        className="relative select-none"
         style={{
           fontFamily: '"DSEG7 Classic", monospace',
           fontSize: `${cfg.digit}px`,
