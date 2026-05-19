@@ -39,15 +39,13 @@ export default function AwardRow({
   return (
     <section
       id={id}
-      className="scroll-mt-28 grid grid-cols-1 lg:grid-cols-2 items-start gap-8 lg:gap-10 py-12 lg:py-20"
+      className={`scroll-mt-28 flex flex-col items-stretch gap-8 lg:items-start lg:gap-10 py-12 lg:py-20 ${
+        imageOnRight ? "lg:flex-row-reverse" : "lg:flex-row"
+      }`}
     >
-      <div
-        className={`order-1 flex justify-center ${
-          imageOnRight ? "lg:order-2 lg:justify-end" : "lg:order-1 lg:justify-start"
-        }`}
-      >
+      <div className="flex justify-center lg:block lg:shrink-0">
         <div
-          className="relative w-full max-w-[336px] aspect-square overflow-hidden rounded-[24px] border border-[#FFEA9E]/60"
+          className="relative w-full max-w-[336px] lg:w-[336px] aspect-square overflow-hidden rounded-[24px] border border-[#FFEA9E]/60"
           style={{ boxShadow: "0 0 6px 0 #FAE287, 0 4px 4px 0 rgba(0, 0, 0, 0.25)" }}
         >
           <Image
@@ -62,9 +60,7 @@ export default function AwardRow({
         </div>
       </div>
 
-      <div
-        className={`order-2 ${imageOnRight ? "lg:order-1" : "lg:order-2"} flex flex-col gap-6 max-w-[520px]`}
-      >
+      <div className="flex flex-col gap-6 lg:flex-1 lg:max-w-[520px]">
         {/* Title row: Target icon + cream title, 16px gap */}
         <h3 className="flex items-center gap-4 text-2xl font-bold leading-8 text-[#FFEA9E]">
           <TargetIcon className="shrink-0" />
@@ -83,16 +79,18 @@ export default function AwardRow({
 
         <div className="h-px w-full bg-[#2E3940]" />
 
-        {/* Count row: Diamond icon + label + value + unit, all cream. Unit wraps inside
-            a narrow column mirroring Figma "Số lượng" frame (~107px). */}
+        {/* Count row: Diamond icon + label + (count + unit grouped). Unit stays beside
+            the count, vertically centered; long unit text wraps inside its narrow column. */}
         <div className="flex items-center gap-4 flex-wrap">
           <DiamondIcon className="shrink-0 text-[#FFEA9E]" />
           <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
             Số lượng giải thưởng:
           </span>
-          <span className="text-2xl font-bold leading-8 text-white">{count}</span>
-          <span className="inline-block max-w-[80px] text-sm font-bold text-white/80 leading-5 align-middle">
-            {countUnit}
+          <span className="inline-flex items-center gap-2">
+            <span className="text-2xl font-bold leading-8 text-white">{count}</span>
+            <span className="max-w-[80px] text-sm font-bold text-white/80 leading-5">
+              {countUnit}
+            </span>
           </span>
         </div>
 
