@@ -39,7 +39,7 @@ export default function AwardRow({
   return (
     <section
       id={id}
-      className="scroll-mt-28 grid grid-cols-1 lg:grid-cols-2 items-start gap-10 lg:gap-16 py-12 lg:py-20"
+      className="scroll-mt-28 grid grid-cols-1 lg:grid-cols-2 items-start gap-8 lg:gap-10 py-12 lg:py-20"
     >
       <div
         className={`order-1 flex justify-center ${
@@ -83,14 +83,15 @@ export default function AwardRow({
 
         <div className="h-px w-full bg-[#2E3940]" />
 
-        {/* Count row: Diamond icon + label + value + unit, all cream */}
+        {/* Count row: Diamond icon + label + value + unit, all cream. Unit wraps inside
+            a narrow column mirroring Figma "Số lượng" frame (~107px). */}
         <div className="flex items-center gap-4 flex-wrap">
           <DiamondIcon className="shrink-0 text-[#FFEA9E]" />
           <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
             Số lượng giải thưởng:
           </span>
           <span className="text-2xl font-bold leading-8 text-white">{count}</span>
-          <span className="text-sm font-bold text-white/80 leading-5">
+          <span className="inline-block max-w-[80px] text-sm font-bold text-white/80 leading-5 align-middle">
             {countUnit}
           </span>
         </div>
