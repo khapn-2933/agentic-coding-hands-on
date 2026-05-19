@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 
 const KNOWN_STUBS = new Set([
-  "awards",
   "sun-kudos",
   "profile",
   "admin",
