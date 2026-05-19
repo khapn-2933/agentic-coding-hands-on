@@ -88,7 +88,7 @@ export default function AwardRow({
           </span>
           <span className="inline-flex items-center gap-2">
             <span className="text-2xl font-bold leading-8 text-white">{count}</span>
-            <span className="max-w-[80px] text-sm font-bold text-white/80 leading-5">
+            <span className="block max-w-[44px] text-sm font-bold text-white/80 leading-5 [word-spacing:9999px]">
               {countUnit}
             </span>
           </span>

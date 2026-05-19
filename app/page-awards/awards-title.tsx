@@ -45,7 +45,7 @@ export default function AwardsTitle() {
         </div>
       </div>
 
-      <section className="w-full px-4 md:px-18 lg:px-36 pt-4 pb-12 lg:pb-16">
+      <section className="w-full px-4 md:px-18 lg:px-36 pt-4 pb-4 lg:pb-6">
         <div className="max-w-7xl mx-auto flex flex-col gap-4">
           <p className="text-2xl font-bold leading-8 text-white text-center">
             Sun* Annual Awards 2025
