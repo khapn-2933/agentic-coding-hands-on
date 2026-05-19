@@ -45,6 +45,8 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
   });
 
   useEffect(() => {
+    // Hydrate from real time on mount, then refresh once per minute.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCountdown(computeCountdown(eventStartAt));
     const timer = setInterval(() => {
       setCountdown(computeCountdown(eventStartAt));
@@ -84,9 +86,9 @@ export default function HeroCountdown({ eventStartAt }: HeroCountdownProps) {
           )}
 
           <div className="flex items-start gap-10">
-            <CountdownTile value={countdown.days} label="DAYS" />
-            <CountdownTile value={countdown.hours} label="HOURS" />
-            <CountdownTile value={countdown.minutes} label="MINUTES" />
+            <CountdownTile size="sm" value={countdown.days} label="DAYS" />
+            <CountdownTile size="sm" value={countdown.hours} label="HOURS" />
+            <CountdownTile size="sm" value={countdown.minutes} label="MINUTES" />
           </div>
         </div>
 
