@@ -39,7 +39,7 @@ export default function AwardRow({
   return (
     <section
       id={id}
-      className="scroll-mt-28 grid grid-cols-1 lg:grid-cols-2 items-center gap-10 lg:gap-16 py-12 lg:py-20"
+      className="scroll-mt-28 grid grid-cols-1 lg:grid-cols-2 items-start gap-10 lg:gap-16 py-12 lg:py-20"
     >
       <div
         className={`order-1 flex justify-center ${
@@ -81,56 +81,55 @@ export default function AwardRow({
           {description}
         </p>
 
-        <div className="flex flex-col gap-4">
-          {/* Count row: Diamond icon + label + value + unit, all cream */}
-          <div className="flex items-center gap-4 flex-wrap">
-            <DiamondIcon className="shrink-0 text-[#FFEA9E]" />
-            <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
-              Số lượng giải thưởng:
-            </span>
-            <span className="text-2xl font-bold leading-8 text-white">{count}</span>
+        <div className="h-px w-full bg-[#2E3940]" />
+
+        {/* Count row: Diamond icon + label + value + unit, all cream */}
+        <div className="flex items-center gap-4 flex-wrap">
+          <DiamondIcon className="shrink-0 text-[#FFEA9E]" />
+          <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
+            Số lượng giải thưởng:
+          </span>
+          <span className="text-2xl font-bold leading-8 text-white">{count}</span>
+          <span className="text-sm font-bold text-white/80 leading-5">
+            {countUnit}
+          </span>
+        </div>
+
+        <div className="h-px w-full bg-[#2E3940]" />
+
+        {/* Value row: License/Medal icon + label + value */}
+        <div className="flex items-center gap-4 flex-wrap">
+          <LicenseIcon className="shrink-0 text-[#FFEA9E]" />
+          <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
+            Giá trị giải thưởng:
+          </span>
+          <span className="text-2xl font-bold leading-8 text-white">{value}</span>
+          {valueNote && (
             <span className="text-sm font-bold text-white/80 leading-5">
-              {countUnit}
+              {valueNote}
             </span>
-          </div>
-
-          {/* Value row: License/Medal icon + label + value */}
-          <div className="flex items-center gap-4 flex-wrap">
-            <LicenseIcon className="shrink-0 text-[#FFEA9E]" />
-            <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
-              Giá trị giải thưởng:
-            </span>
-            <span className="text-2xl font-bold leading-8 text-white">{value}</span>
-            {valueNote && (
-              <span className="text-sm font-bold text-white/80 leading-5">
-                {valueNote}
-              </span>
-            )}
-          </div>
-
-          {secondValue && (
-            <>
-              <div className="flex items-center gap-3 text-xs uppercase tracking-wide text-white/40">
-                <span>Hoặc</span>
-                <span className="flex-1 h-px bg-white/10" />
-              </div>
-              <div className="flex items-center gap-4 flex-wrap">
-                <LicenseIcon className="shrink-0 text-[#FFEA9E]" />
-                <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
-                  Giá trị giải thưởng:
-                </span>
-                <span className="text-2xl font-bold leading-8 text-white">
-                  {secondValue}
-                </span>
-                {secondValueNote && (
-                  <span className="text-sm font-bold text-white/80 leading-5">
-                    {secondValueNote}
-                  </span>
-                )}
-              </div>
-            </>
           )}
         </div>
+
+        {secondValue && (
+          <>
+            <div className="h-px w-full bg-[#2E3940]" />
+            <div className="flex items-center gap-4 flex-wrap">
+              <LicenseIcon className="shrink-0 text-[#FFEA9E]" />
+              <span className="text-2xl font-bold leading-8 text-[#FFEA9E]">
+                Giá trị giải thưởng:
+              </span>
+              <span className="text-2xl font-bold leading-8 text-white">
+                {secondValue}
+              </span>
+              {secondValueNote && (
+                <span className="text-sm font-bold text-white/80 leading-5">
+                  {secondValueNote}
+                </span>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );
