@@ -21,7 +21,7 @@ function ArrowUpRight() {
       <path
         d="M5 11l6-6M5 5h6v6"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
