@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { KudosEntry } from "./mock-data";
+import { useKudosLike } from "./use-kudos-like";
 
 // Badge chip images from Figma (109×19 each) — same assets as the highlight card.
 const BADGE_IMAGES: Record<string, string> = {
@@ -74,18 +74,7 @@ interface Props {
 
 export default function KudosCardFeed({ kudos, showNewBadgeOnSender }: Props) {
   const t = useTranslations("SunKudos");
-  const [liked, setLiked] = useState(kudos.isLiked);
-  const [likeCount, setLikeCount] = useState(kudos.likeCount);
-
-  function handleLike() {
-    if (liked) {
-      setLiked(false);
-      setLikeCount((c) => c - 1);
-    } else {
-      setLiked(true);
-      setLikeCount((c) => c + 1);
-    }
-  }
+  const { liked, count: likeCount, toggle: handleLike, disabled } = useKudosLike(kudos);
 
   return (
     <div
@@ -197,7 +186,9 @@ export default function KudosCardFeed({ kudos, showNewBadgeOnSender }: Props) {
         <button
           type="button"
           onClick={handleLike}
-          className="flex items-center gap-1.5 cursor-pointer transition-transform active:scale-90"
+          disabled={disabled}
+          title={disabled ? t("cannotLikeOwn") : undefined}
+          className="flex items-center gap-1.5 transition-transform enabled:cursor-pointer enabled:active:scale-90 disabled:cursor-not-allowed disabled:opacity-60"
           aria-label={liked ? "Unlike" : "Like"}
         >
           {/* Count on the left, heart icon on the right (per Figma) */}

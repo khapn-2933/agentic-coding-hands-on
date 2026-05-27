@@ -55,7 +55,14 @@ function toPerson(row: ProfileRow | null): KudosPerson {
   };
 }
 
-function toEntry(row: KudosRow): KudosEntry {
+interface LikeContext {
+  profileId: string | null;
+  likedSet: Set<string>;
+}
+
+const NO_LIKE_CONTEXT: LikeContext = { profileId: null, likedSet: new Set() };
+
+function toEntry(row: KudosRow, ctx: LikeContext = NO_LIKE_CONTEXT): KudosEntry {
   // Anonymous kudos hide the sender's identity on the board.
   const sender: KudosPerson = row.is_anonymous
     ? {
@@ -76,7 +83,54 @@ function toEntry(row: KudosRow): KudosEntry {
     hashtags: row.hashtags,
     imageUrls: row.image_urls,
     likeCount: row.like_count,
-    isLiked: false,
+    isLiked: ctx.likedSet.has(row.id),
+    // The sender can't like their own kudos (compare real sender even if anon).
+    isOwn: !!ctx.profileId && row.sender?.id === ctx.profileId,
+  };
+}
+
+// Resolve the current user's profile id (read-only) + the set of kudos they've
+// liked, so the board can render heart state. Returns empty context when signed
+// out or profile-less.
+async function getLikeContext(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>
+): Promise<LikeContext> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return NO_LIKE_CONTEXT;
+
+  let profileId: string | null = null;
+  const byUser = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  profileId = byUser.data?.id ?? null;
+  if (!profileId && user.email) {
+    const byEmail = await supabase
+      .from("profiles")
+      .select("id, user_id")
+      .eq("email", user.email)
+      .maybeSingle();
+    // Only adopt a seeded profile that is unclaimed or already ours — never
+    // one linked to a different auth user (would leak their liked set / isOwn).
+    if (
+      byEmail.data &&
+      (byEmail.data.user_id === null || byEmail.data.user_id === user.id)
+    ) {
+      profileId = byEmail.data.id;
+    }
+  }
+  if (!profileId) return NO_LIKE_CONTEXT;
+
+  const { data: likes } = await supabase
+    .from("kudos_likes")
+    .select("kudos_id")
+    .eq("user_id", profileId);
+  return {
+    profileId,
+    likedSet: new Set((likes ?? []).map((l) => l.kudos_id as string)),
   };
 }
 
@@ -113,9 +167,9 @@ export async function getAllKudos(
     .limit(limit);
   if (filters?.hashtags?.length) query = query.overlaps("hashtags", filters.hashtags);
   if (filters?.department) query = query.eq("receiver.department_id", filters.department);
-  const { data, error } = await query;
+  const [{ data, error }, ctx] = await Promise.all([query, getLikeContext(supabase)]);
   if (error || !data) return [];
-  return (data as unknown as KudosRow[]).map(toEntry);
+  return (data as unknown as KudosRow[]).map((row) => toEntry(row, ctx));
 }
 
 export async function getHighlightKudos(
@@ -130,9 +184,9 @@ export async function getHighlightKudos(
     .limit(limit);
   if (filters?.hashtags?.length) query = query.overlaps("hashtags", filters.hashtags);
   if (filters?.department) query = query.eq("receiver.department_id", filters.department);
-  const { data, error } = await query;
+  const [{ data, error }, ctx] = await Promise.all([query, getLikeContext(supabase)]);
   if (error || !data) return [];
-  return (data as unknown as KudosRow[]).map(toEntry);
+  return (data as unknown as KudosRow[]).map((row) => toEntry(row, ctx));
 }
 
 export interface SpotlightData {

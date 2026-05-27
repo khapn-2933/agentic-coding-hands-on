@@ -167,6 +167,7 @@
     "copyLink": "Copy Link",
     "viewDetails": "Xem chi tiết",
     "emptyKudos": "Hiện tại chưa có Kudos nào.",
+    "cannotLikeOwn": "Bạn không thể thích Kudos của chính mình",
     "statKudosReceived": "Số Kudos bạn nhận được:",
     "statKudosSent": "Số Kudos bạn đã gửi:",
     "statHeartsReceived": "Số tim bạn nhận được:",

@@ -134,3 +134,65 @@ export async function createKudos(
   revalidatePath("/sun-kudos");
   return { ok: true };
 }
+
+export interface ToggleLikeResult {
+  ok: boolean;
+  liked?: boolean;
+  error?: string;
+}
+
+/**
+ * Toggle the current user's like on a kudos. Inserts/deletes a kudos_likes row
+ * (RLS enforces own-profile + no self-like; the PK enforces one-per-user; a
+ * trigger keeps kudos.like_count in sync). Returns the resulting liked state.
+ */
+export async function toggleLike(kudosId: string): Promise<ToggleLikeResult> {
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!isUuid.test(kudosId)) return { ok: false, error: "invalid_kudos" };
+
+  const supabase = await createSupabaseServerClient();
+  const profileId = await resolveSenderProfileId(supabase);
+  if (!profileId) return { ok: false, error: "unauthenticated" };
+
+  // Block liking your own kudos (also enforced by RLS).
+  const { data: kudos } = await supabase
+    .from("kudos")
+    .select("sender_id")
+    .eq("id", kudosId)
+    .maybeSingle();
+  if (!kudos) return { ok: false, error: "not_found" };
+  if (kudos.sender_id === profileId) return { ok: false, error: "own_kudos" };
+
+  const { data: existing } = await supabase
+    .from("kudos_likes")
+    .select("kudos_id")
+    .eq("kudos_id", kudosId)
+    .eq("user_id", profileId)
+    .maybeSingle();
+
+  if (existing) {
+    const { error } = await supabase
+      .from("kudos_likes")
+      .delete()
+      .eq("kudos_id", kudosId)
+      .eq("user_id", profileId);
+    if (error) {
+      console.error("[toggleLike] delete failed:", error.message);
+      return { ok: false, error: "server_error" };
+    }
+    revalidatePath("/sun-kudos");
+    return { ok: true, liked: false };
+  }
+
+  // upsert + ignoreDuplicates makes a rapid double-tap idempotent (the PK
+  // unique violation would otherwise surface as an error + spurious revert).
+  const { error } = await supabase
+    .from("kudos_likes")
+    .upsert({ kudos_id: kudosId, user_id: profileId }, { ignoreDuplicates: true });
+  if (error) {
+    console.error("[toggleLike] insert failed:", error.message);
+    return { ok: false, error: "server_error" };
+  }
+  revalidatePath("/sun-kudos");
+  return { ok: true, liked: true };
+}

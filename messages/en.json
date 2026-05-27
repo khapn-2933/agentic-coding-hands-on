@@ -167,6 +167,7 @@
     "copyLink": "Copy Link",
     "viewDetails": "View details",
     "emptyKudos": "No Kudos yet.",
+    "cannotLikeOwn": "You can't like your own Kudos",
     "statKudosReceived": "Kudos you received:",
     "statKudosSent": "Kudos you sent:",
     "statHeartsReceived": "Hearts you received:",

@@ -23,13 +23,21 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
   const t = useTranslations("SunKudos");
   const { totalKudos, activityLog } = spotlight;
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [query, setQuery] = useState("");
 
   // Always surface the current user in the cloud so the red highlight is visible,
   // even if they have no kudos yet.
-  const names =
+  const allNames =
     currentUserName && !spotlight.names.includes(currentUserName)
       ? [currentUserName, ...spotlight.names]
       : spotlight.names;
+
+  // Spotlight search: filter the cloud to names matching the query (trimmed,
+  // case-insensitive). Empty query shows everyone.
+  const q = query.trim().toLowerCase();
+  const names = q
+    ? allNames.filter((n) => n.toLowerCase().includes(q))
+    : allNames;
 
   // Reserve the bottom-LEFT quarter for the timeline: names fill the top
   // (full width) + the bottom-RIGHT, ~3/4 of the box. Split ~65% to the top.
@@ -123,15 +131,15 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
                     fill="rgba(255,255,255,0.4)"
                   />
                 </svg>
-                <span
-                  className="text-[13px]"
-                  style={{
-                    fontFamily: "Montserrat, sans-serif",
-                    color: "rgba(255,255,255,0.35)",
-                  }}
-                >
-                  {t("searchProfilePlaceholder")}
-                </span>
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  maxLength={100}
+                  placeholder={t("searchProfilePlaceholder")}
+                  className="w-full bg-transparent text-[13px] text-white outline-none placeholder:text-white/35"
+                  style={{ fontFamily: "Montserrat, sans-serif" }}
+                />
               </div>
 
               {/* Kudos count — node 3007:17482: WHITE #FFF, 36px/700 */}
@@ -155,6 +163,18 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
                 right); the faint activity timeline gets only the bottom-LEFT
                 quarter, so names never overlap the timeline. */}
             <div className="relative mx-8 mb-8" style={{ minHeight: "360px" }}>
+              {/* Empty search result */}
+              {q && names.length === 0 && (
+                <div className="flex items-center justify-center py-24">
+                  <p
+                    className="text-[15px] font-bold"
+                    style={{ fontFamily: "Montserrat, sans-serif", color: "rgba(255,255,255,0.5)" }}
+                  >
+                    {t("noData")}
+                  </p>
+                </div>
+              )}
+
               {/* Top region — full-width staggered name cloud */}
               <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-9 py-6">
                 {topNames.map((name, i) => renderName(name, i))}
