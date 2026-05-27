@@ -80,31 +80,57 @@ function toEntry(row: KudosRow): KudosEntry {
   };
 }
 
-const KUDOS_SELECT = `
-  id, title, content, hashtags, image_urls, like_count, is_highlight,
-  is_anonymous, anonymous_name, created_at,
-  sender:profiles!sender_id(id, full_name, department_id, avatar_url, badge),
-  receiver:profiles!receiver_id(id, full_name, department_id, avatar_url, badge)
-`;
+export interface KudosFilters {
+  /** Raw hashtag strings (with leading #). Matches kudos containing ANY of them. */
+  hashtags?: string[];
+  /** department_id — keeps kudos whose RECEIVER belongs to that department. */
+  department?: string;
+}
 
-export async function getAllKudos(limit = 20): Promise<KudosEntry[]> {
+// When filtering by department we must INNER-join the receiver so the eq filter
+// prunes parent kudos rows (a plain embed would only filter the nested data).
+function kudosSelect(department?: string): string {
+  const receiverJoin = department
+    ? "profiles!receiver_id!inner"
+    : "profiles!receiver_id";
+  return `
+    id, title, content, hashtags, image_urls, like_count, is_highlight,
+    is_anonymous, anonymous_name, created_at,
+    sender:profiles!sender_id(id, full_name, department_id, avatar_url, badge),
+    receiver:${receiverJoin}(id, full_name, department_id, avatar_url, badge)
+  `;
+}
+
+export async function getAllKudos(
+  limit = 20,
+  filters?: KudosFilters
+): Promise<KudosEntry[]> {
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from("kudos")
-    .select(KUDOS_SELECT)
+    .select(kudosSelect(filters?.department))
     .order("created_at", { ascending: false })
     .limit(limit);
+  if (filters?.hashtags?.length) query = query.overlaps("hashtags", filters.hashtags);
+  if (filters?.department) query = query.eq("receiver.department_id", filters.department);
+  const { data, error } = await query;
   if (error || !data) return [];
   return (data as unknown as KudosRow[]).map(toEntry);
 }
 
-export async function getHighlightKudos(limit = 5): Promise<KudosEntry[]> {
+export async function getHighlightKudos(
+  limit = 5,
+  filters?: KudosFilters
+): Promise<KudosEntry[]> {
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from("kudos")
-    .select(KUDOS_SELECT)
+    .select(kudosSelect(filters?.department))
     .order("like_count", { ascending: false })
     .limit(limit);
+  if (filters?.hashtags?.length) query = query.overlaps("hashtags", filters.hashtags);
+  if (filters?.department) query = query.eq("receiver.department_id", filters.department);
+  const { data, error } = await query;
   if (error || !data) return [];
   return (data as unknown as KudosRow[]).map(toEntry);
 }
@@ -271,4 +297,19 @@ export async function getHashtagSuggestions(limit = 200): Promise<string[]> {
     for (const tag of (row.hashtags as string[]) ?? []) set.add(tag);
   }
   return Array.from(set).sort();
+}
+
+export interface Department {
+  id: string;
+  name: string;
+}
+
+/** Departments for the "Phòng ban" filter dropdown. */
+export async function getDepartments(): Promise<Department[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("departments")
+    .select("id, name")
+    .order("name", { ascending: true });
+  return data ?? [];
 }

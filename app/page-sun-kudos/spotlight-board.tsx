@@ -12,16 +12,6 @@ interface SpotlightBoardProps {
   currentUserName?: string;
 }
 
-// Deterministic pseudo-random positions so they're stable across renders
-function getPosition(index: number, total: number) {
-  const goldenAngle = 137.5;
-  const angle = (index * goldenAngle * Math.PI) / 180;
-  const r = 0.25 + 0.55 * Math.sqrt(index / total);
-  const x = 50 + r * 38 * Math.cos(angle);
-  const y = 15 + r * 60 * Math.sin(angle);
-  return { x: Math.max(2, Math.min(90, x)), y: Math.max(5, Math.min(85, y)) };
-}
-
 const FONT_SIZES = [11, 13, 14, 16, 18, 20, 13, 15, 12, 17, 14, 13, 16, 12, 18, 11, 14, 15];
 const OPACITIES = [1, 0.7, 0.85, 0.6, 1, 0.75, 0.9, 0.65, 1, 0.8, 0.7, 0.9, 1, 0.6, 0.85, 0.7, 0.75, 0.9];
 
@@ -130,24 +120,24 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
               <div style={{ width: "240px" }} />
             </div>
 
-            {/* Word cloud canvas */}
-            <div className="relative mx-8" style={{ height: "320px" }}>
+            {/* Word cloud — centered flow layout so names never overlap, with
+                varied font sizes/opacity to keep the scattered tag-cloud feel. */}
+            <div
+              className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mx-8 py-6"
+              style={{ minHeight: "320px" }}
+            >
               {names.map((name, i) => {
-                const pos = getPosition(i, names.length);
                 const fontSize = FONT_SIZES[i % FONT_SIZES.length];
                 const opacity = OPACITIES[i % OPACITIES.length];
                 const isCurrentUser = currentUserName && name === currentUserName;
                 return (
                   <span
                     key={`${name}-${i}`}
-                    className="absolute font-bold whitespace-nowrap cursor-pointer hover:text-[#FFEA9E] transition-colors"
+                    className="font-bold whitespace-nowrap cursor-pointer hover:text-[#FFEA9E] transition-colors"
                     style={{
-                      left: `${pos.x.toFixed(3)}%`,
-                      top: `${pos.y.toFixed(3)}%`,
                       fontSize: `${fontSize}px`,
                       fontFamily: "Montserrat, sans-serif",
                       color: isCurrentUser ? "#D4271D" : `rgba(255,255,255,${opacity})`,
-                      transform: "translate(-50%, -50%)",
                     }}
                   >
                     {name}
