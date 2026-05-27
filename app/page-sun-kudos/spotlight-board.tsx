@@ -14,6 +14,10 @@ interface SpotlightBoardProps {
 
 const FONT_SIZES = [11, 13, 14, 16, 18, 20, 13, 15, 12, 17, 14, 13, 16, 12, 18, 11, 14, 15];
 const OPACITIES = [1, 0.7, 0.85, 0.6, 1, 0.75, 0.9, 0.65, 1, 0.8, 0.7, 0.9, 1, 0.6, 0.85, 0.7, 0.75, 0.9];
+// Deterministic vertical stagger (px) so names sit "so le" like the design
+// word cloud instead of in straight rows. Bounded < row gap (40px) so wrapped
+// lines never overlap.
+const STAGGER = [0, 14, -10, 8, -16, 6, -12, 16, -6, 12, -14, 10, -8, 16, -12, 6];
 
 export default function SpotlightBoard({ spotlight, currentUserName }: SpotlightBoardProps) {
   const t = useTranslations("SunKudos");
@@ -120,15 +124,18 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
               <div style={{ width: "240px" }} />
             </div>
 
-            {/* Word cloud — centered flow layout so names never overlap, with
-                varied font sizes/opacity to keep the scattered tag-cloud feel. */}
+            {/* Word cloud — centered flow (no horizontal overlap) + per-item
+                vertical stagger so names sit "so le" like the design, not in
+                straight rows. Stagger is bounded under the row gap so wrapped
+                lines still never collide. */}
             <div
-              className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mx-8 py-6"
+              className="flex flex-wrap items-center justify-center gap-x-7 gap-y-10 mx-8 py-8"
               style={{ minHeight: "320px" }}
             >
               {names.map((name, i) => {
                 const fontSize = FONT_SIZES[i % FONT_SIZES.length];
                 const opacity = OPACITIES[i % OPACITIES.length];
+                const offset = STAGGER[i % STAGGER.length];
                 const isCurrentUser = currentUserName && name === currentUserName;
                 return (
                   <span
@@ -138,6 +145,7 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
                       fontSize: `${fontSize}px`,
                       fontFamily: "Montserrat, sans-serif",
                       color: isCurrentUser ? "#D4271D" : `rgba(255,255,255,${opacity})`,
+                      transform: `translateY(${offset}px)`,
                     }}
                   >
                     {name}
@@ -146,30 +154,29 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
               })}
             </div>
 
-            {/* Activity log — node 2940:14230: #FFF, 14px, 700 */}
-            <div
-              className="mx-8 mb-6 rounded-xl px-6 py-4"
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
-              }}
-            >
-              {activityLog.map((entry, i) => {
+            {/* Activity log — Figma node 2940:14230: ~half width (565/1157px),
+                no background, lines fade with age (newest at bottom = full
+                opacity, older above progressively fainter → "mờ ảo"). */}
+            <div className="mx-8 mb-6 max-w-[565px] flex flex-col">
+              {[...activityLog].reverse().map((entry, i, arr) => {
+                // Oldest (top) faint → newest (bottom) full opacity.
+                const opacity = 0.2 + (0.8 * (i + 1)) / arr.length;
                 const isCurrentUser =
                   currentUserName && entry.text.includes(currentUserName);
                 return (
-                  <div key={i} className="flex items-center gap-3 py-1.5">
+                  <div
+                    key={`${entry.time}-${i}`}
+                    className="flex items-center gap-3 py-1"
+                    style={{ opacity }}
+                  >
                     <span
                       className="text-[14px] font-bold flex-shrink-0"
-                      style={{
-                        fontFamily: "Montserrat, sans-serif",
-                        color: "#FFFFFF",
-                      }}
+                      style={{ fontFamily: "Montserrat, sans-serif", color: "#FFFFFF" }}
                     >
                       {entry.time}
                     </span>
                     <span
-                      className="text-[14px] font-bold"
+                      className="text-[14px] font-bold truncate"
                       style={{
                         fontFamily: "Montserrat, sans-serif",
                         color: isCurrentUser ? "#D4271D" : "#FFFFFF",
