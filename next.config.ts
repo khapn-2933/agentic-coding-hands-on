@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "i.pravatar.cc",
       },
+      {
+        // Google account avatars (OAuth profile picture) — stored on profiles
+        // created when a Google-authenticated user first posts a kudos.
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
     ],
   },
 };
