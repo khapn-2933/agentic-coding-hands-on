@@ -124,76 +124,73 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
               <div style={{ width: "240px" }} />
             </div>
 
-            {/* Word cloud — centered flow (no horizontal overlap) + per-item
-                vertical stagger so names sit "so le" like the design, not in
-                straight rows. Stagger is bounded under the row gap so wrapped
-                lines still never collide. */}
-            <div
-              className="flex flex-wrap items-center justify-center gap-x-7 gap-y-10 mx-8 py-8"
-              style={{ minHeight: "320px" }}
-            >
-              {names.map((name, i) => {
-                const fontSize = FONT_SIZES[i % FONT_SIZES.length];
-                const opacity = OPACITIES[i % OPACITIES.length];
-                const offset = STAGGER[i % STAGGER.length];
-                const isCurrentUser = currentUserName && name === currentUserName;
-                return (
-                  <span
-                    key={`${name}-${i}`}
-                    className="font-bold whitespace-nowrap cursor-pointer hover:text-[#FFEA9E] transition-colors"
-                    style={{
-                      fontSize: `${fontSize}px`,
-                      fontFamily: "Montserrat, sans-serif",
-                      color: isCurrentUser ? "#D4271D" : `rgba(255,255,255,${opacity})`,
-                      transform: `translateY(${offset}px)`,
-                    }}
-                  >
-                    {name}
-                  </span>
-                );
-              })}
-            </div>
-
-            {/* Activity log — Figma node 2940:14230: ~half width (565/1157px),
-                no background, lines fade with age (newest at bottom = full
-                opacity, older above progressively fainter → "mờ ảo"). */}
-            <div className="mx-8 mb-6 max-w-[565px] flex flex-col">
-              {[...activityLog].reverse().map((entry, i, arr) => {
-                // Oldest (top) faint → newest (bottom) full opacity.
-                const opacity = 0.2 + (0.8 * (i + 1)) / arr.length;
-                const isCurrentUser =
-                  currentUserName && entry.text.includes(currentUserName);
-                return (
-                  <div
-                    key={`${entry.time}-${i}`}
-                    className="flex items-center gap-3 py-1"
-                    style={{ opacity }}
-                  >
+            {/* Canvas — the scattered/staggered name cloud fills the whole box;
+                the faint activity timeline overlays the bottom-LEFT half while
+                cloud names (incl. the bottom-right) show around it, matching the
+                Figma layout (timeline 565/1157px ≈ half, names fill the rest). */}
+            <div className="relative mx-8 mb-8" style={{ minHeight: "360px" }}>
+              {/* Word cloud — flow (no horizontal overlap) + per-item vertical
+                  stagger so names sit "so le", not in straight rows. */}
+              <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-10 py-6">
+                {names.map((name, i) => {
+                  const fontSize = FONT_SIZES[i % FONT_SIZES.length];
+                  const opacity = OPACITIES[i % OPACITIES.length];
+                  const offset = STAGGER[i % STAGGER.length];
+                  const isCurrentUser = currentUserName && name === currentUserName;
+                  return (
                     <span
-                      className="text-[14px] font-bold flex-shrink-0"
-                      style={{ fontFamily: "Montserrat, sans-serif", color: "#FFFFFF" }}
-                    >
-                      {entry.time}
-                    </span>
-                    <span
-                      className="text-[14px] font-bold truncate"
+                      key={`${name}-${i}`}
+                      className="font-bold whitespace-nowrap cursor-pointer hover:text-[#FFEA9E] transition-colors"
                       style={{
+                        fontSize: `${fontSize}px`,
                         fontFamily: "Montserrat, sans-serif",
-                        color: isCurrentUser ? "#D4271D" : "#FFFFFF",
+                        color: isCurrentUser ? "#D4271D" : `rgba(255,255,255,${opacity})`,
+                        transform: `translateY(${offset}px)`,
                       }}
                     >
-                      {entry.text}
+                      {name}
                     </span>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
 
-            {/* Fullscreen icon — bottom-right per Figma */}
-            <div className="flex justify-end px-8 pb-4">
+              {/* Activity timeline — overlay, bottom-left half, no background,
+                  lines fade with age (newest bottom = full, older fainter). */}
+              <div className="absolute bottom-0 left-0 w-1/2 flex flex-col pointer-events-none">
+                {[...activityLog].reverse().map((entry, i, arr) => {
+                  const opacity = 0.2 + (0.8 * (i + 1)) / arr.length;
+                  const isCurrentUser =
+                    currentUserName && entry.text.includes(currentUserName);
+                  return (
+                    <div
+                      key={`${entry.time}-${i}`}
+                      className="flex items-center gap-3 py-1"
+                      style={{ opacity }}
+                    >
+                      <span
+                        className="text-[14px] font-bold flex-shrink-0"
+                        style={{ fontFamily: "Montserrat, sans-serif", color: "#FFFFFF" }}
+                      >
+                        {entry.time}
+                      </span>
+                      <span
+                        className="text-[14px] font-bold truncate"
+                        style={{
+                          fontFamily: "Montserrat, sans-serif",
+                          color: isCurrentUser ? "#D4271D" : "#FFFFFF",
+                        }}
+                      >
+                        {entry.text}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Fullscreen / pan-zoom — bottom-right corner */}
               <button
                 type="button"
-                className="flex items-center justify-center w-10 h-10 rounded cursor-pointer hover:bg-white/10 transition-colors"
+                className="absolute bottom-0 right-0 flex items-center justify-center w-10 h-10 rounded cursor-pointer hover:bg-white/10 transition-colors"
                 aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
                 onClick={() => setIsFullscreen((v) => !v)}
               >
