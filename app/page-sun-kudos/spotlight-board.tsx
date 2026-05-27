@@ -31,6 +31,33 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
       ? [currentUserName, ...spotlight.names]
       : spotlight.names;
 
+  // Reserve the bottom-LEFT quarter for the timeline: names fill the top
+  // (full width) + the bottom-RIGHT, ~3/4 of the box. Split ~65% to the top.
+  const splitAt = Math.ceil(names.length * 0.65);
+  const topNames = names.slice(0, splitAt);
+  const bottomRightNames = names.slice(splitAt);
+
+  const renderName = (name: string, i: number) => {
+    const fontSize = FONT_SIZES[i % FONT_SIZES.length];
+    const opacity = OPACITIES[i % OPACITIES.length];
+    const offset = STAGGER[i % STAGGER.length];
+    const isCurrentUser = currentUserName && name === currentUserName;
+    return (
+      <span
+        key={`${name}-${i}`}
+        className="font-bold whitespace-nowrap cursor-pointer hover:text-[#FFEA9E] transition-colors"
+        style={{
+          fontSize: `${fontSize}px`,
+          fontFamily: "Montserrat, sans-serif",
+          color: isCurrentUser ? "#D4271D" : `rgba(255,255,255,${opacity})`,
+          transform: `translateY(${offset}px)`,
+        }}
+      >
+        {name}
+      </span>
+    );
+  };
+
   return (
     <section className="w-full bg-[#00101A] pt-10">
       {/* Section header */}
@@ -124,67 +151,54 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
               <div style={{ width: "240px" }} />
             </div>
 
-            {/* Canvas — the scattered/staggered name cloud fills the whole box;
-                the faint activity timeline overlays the bottom-LEFT half while
-                cloud names (incl. the bottom-right) show around it, matching the
-                Figma layout (timeline 565/1157px ≈ half, names fill the rest). */}
+            {/* Canvas — names occupy ~3/4 of the box (full-width top + bottom-
+                right); the faint activity timeline gets only the bottom-LEFT
+                quarter, so names never overlap the timeline. */}
             <div className="relative mx-8 mb-8" style={{ minHeight: "360px" }}>
-              {/* Word cloud — flow (no horizontal overlap) + per-item vertical
-                  stagger so names sit "so le", not in straight rows. */}
-              <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-10 py-6">
-                {names.map((name, i) => {
-                  const fontSize = FONT_SIZES[i % FONT_SIZES.length];
-                  const opacity = OPACITIES[i % OPACITIES.length];
-                  const offset = STAGGER[i % STAGGER.length];
-                  const isCurrentUser = currentUserName && name === currentUserName;
-                  return (
-                    <span
-                      key={`${name}-${i}`}
-                      className="font-bold whitespace-nowrap cursor-pointer hover:text-[#FFEA9E] transition-colors"
-                      style={{
-                        fontSize: `${fontSize}px`,
-                        fontFamily: "Montserrat, sans-serif",
-                        color: isCurrentUser ? "#D4271D" : `rgba(255,255,255,${opacity})`,
-                        transform: `translateY(${offset}px)`,
-                      }}
-                    >
-                      {name}
-                    </span>
-                  );
-                })}
+              {/* Top region — full-width staggered name cloud */}
+              <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-9 py-6">
+                {topNames.map((name, i) => renderName(name, i))}
               </div>
 
-              {/* Activity timeline — overlay, bottom-left half, no background,
-                  lines fade with age (newest bottom = full, older fainter). */}
-              <div className="absolute bottom-0 left-0 w-1/2 flex flex-col pointer-events-none">
-                {[...activityLog].reverse().map((entry, i, arr) => {
-                  const opacity = 0.2 + (0.8 * (i + 1)) / arr.length;
-                  const isCurrentUser =
-                    currentUserName && entry.text.includes(currentUserName);
-                  return (
-                    <div
-                      key={`${entry.time}-${i}`}
-                      className="flex items-center gap-3 py-1"
-                      style={{ opacity }}
-                    >
-                      <span
-                        className="text-[14px] font-bold flex-shrink-0"
-                        style={{ fontFamily: "Montserrat, sans-serif", color: "#FFFFFF" }}
+              {/* Bottom region — left quarter = faint timeline, right = more names */}
+              <div className="flex items-end gap-6">
+                {/* Activity timeline — bottom-left, no background, lines fade
+                    with age (newest bottom = full, older fainter → "mờ ảo"). */}
+                <div className="w-1/2 flex flex-col">
+                  {[...activityLog].reverse().map((entry, i, arr) => {
+                    const opacity = 0.2 + (0.8 * (i + 1)) / arr.length;
+                    const isCurrentUser =
+                      currentUserName && entry.text.includes(currentUserName);
+                    return (
+                      <div
+                        key={`${entry.time}-${i}`}
+                        className="flex items-center gap-3 py-1"
+                        style={{ opacity }}
                       >
-                        {entry.time}
-                      </span>
-                      <span
-                        className="text-[14px] font-bold truncate"
-                        style={{
-                          fontFamily: "Montserrat, sans-serif",
-                          color: isCurrentUser ? "#D4271D" : "#FFFFFF",
-                        }}
-                      >
-                        {entry.text}
-                      </span>
-                    </div>
-                  );
-                })}
+                        <span
+                          className="text-[14px] font-bold flex-shrink-0"
+                          style={{ fontFamily: "Montserrat, sans-serif", color: "#FFFFFF" }}
+                        >
+                          {entry.time}
+                        </span>
+                        <span
+                          className="text-[14px] font-bold truncate"
+                          style={{
+                            fontFamily: "Montserrat, sans-serif",
+                            color: isCurrentUser ? "#D4271D" : "#FFFFFF",
+                          }}
+                        >
+                          {entry.text}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Bottom-right names */}
+                <div className="w-1/2 flex flex-wrap items-center justify-center gap-x-6 gap-y-8 pb-2">
+                  {bottomRightNames.map((name, i) => renderName(name, i + splitAt))}
+                </div>
               </div>
 
               {/* Fullscreen / pan-zoom — bottom-right corner */}
