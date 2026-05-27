@@ -115,5 +115,26 @@
     "ariaLabel": "Select language",
     "vi": "VN",
     "en": "EN"
+  },
+  "SunKudos": {
+    "heroTitle": "Recognition and appreciation system",
+    "sendKudosPlaceholder": "Today, who would you like to send appreciation and recognition to?",
+    "searchProfilePlaceholder": "Search Sunner profile",
+    "highlightKudos": "HIGHLIGHT KUDOS",
+    "spotlightBoard": "SPOTLIGHT BOARD",
+    "allKudos": "ALL KUDOS",
+    "filterHashtag": "Hashtag",
+    "filterDepartment": "Department",
+    "copyLink": "Copy Link",
+    "viewDetails": "View details",
+    "emptyKudos": "No Kudos yet.",
+    "statKudosReceived": "Kudos you received:",
+    "statKudosSent": "Kudos you sent:",
+    "statHeartsReceived": "Hearts you received:",
+    "statSecretBoxOpened": "Secret Boxes opened:",
+    "statSecretBoxUnopened": "Secret Boxes unopened:",
+    "openSecretBox": "Open Secret Box",
+    "giftRecipientsTitle": "10 LATEST GIFT RECIPIENTS",
+    "noData": "No data yet"
   }
 }

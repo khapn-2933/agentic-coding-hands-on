@@ -45,10 +45,10 @@ export default async function SaaHeader({ user, activePath }: SaaHeaderProps) {
               <Link
                 key={key}
                 href={href}
-                className={`text-sm font-medium uppercase tracking-[0.5px] transition-colors duration-150 ${
+                className={`font-bold tracking-[0.15px] transition-colors duration-150 ${
                   isActive
-                    ? "text-[#FFEA9E] underline underline-offset-4"
-                    : "text-white/80 hover:text-white"
+                    ? "text-base text-[#FFEA9E] underline underline-offset-4"
+                    : "text-sm text-white/80 hover:text-white"
                 }`}
               >
                 {label}
