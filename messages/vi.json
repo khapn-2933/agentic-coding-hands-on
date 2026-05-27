@@ -116,6 +116,17 @@
     "vi": "VN",
     "en": "EN"
   },
+  "AddLink": {
+    "title": "Thêm đường dẫn",
+    "contentLabel": "Nội dung",
+    "urlLabel": "URL",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "errorRequired": "Không được để trống",
+    "errorTextTooLong": "Nội dung tối đa 100 ký tự",
+    "errorUrlFormat": "URL không hợp lệ",
+    "errorUrlLength": "URL phải từ 5 đến 2048 ký tự"
+  },
   "WriteKudo": {
     "modalTitle": "Gửi lời cám ơn và ghi nhận đến đồng đội",
     "recipientLabel": "Người nhận",

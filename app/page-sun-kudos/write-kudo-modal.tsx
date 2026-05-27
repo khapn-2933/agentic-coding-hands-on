@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import WriteKudoHashtags from "./write-kudo-hashtags";
 import WriteKudoImages, { type ImagePreview } from "./write-kudo-images";
+import AddLinkBox from "./add-link-box";
 
 // ─── Public types ────────────────────────────────────────────────────────────
 
@@ -71,11 +72,13 @@ function ToolbarBtn({
   children,
   first,
   last,
+  onClick,
 }: {
   label: string;
   children: React.ReactNode;
   first?: boolean;
   last?: boolean;
+  onClick?: () => void;
 }) {
   const radius = first
     ? "rounded-tl-lg rounded-bl-none rounded-tr-none rounded-br-none"
@@ -87,6 +90,7 @@ function ToolbarBtn({
       type="button"
       aria-label={label}
       title={label}
+      onClick={onClick}
       className={`flex items-center justify-center w-14 h-10 border border-[#998C5F] bg-transparent hover:bg-[#FFF8E1] transition-colors ${radius}`}
     >
       {children}
@@ -110,9 +114,31 @@ export default function WriteKudoModal({
   const [searchQuery, setSearchQuery] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [linkBoxOpen, setLinkBoxOpen] = useState(false);
 
   const searchRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
+
+  // Insert a markdown link [text](url) at the textarea cursor (body is plain text).
+  function insertLink(text: string, url: string) {
+    const snippet = `[${text}](${url})`;
+    const el = bodyRef.current;
+    const current = form.content;
+    const start = el?.selectionStart ?? current.length;
+    const end = el?.selectionEnd ?? current.length;
+    const next = current.slice(0, start) + snippet + current.slice(end);
+    setForm((prev) => ({ ...prev, content: next }));
+    setErrors((prev) => ({ ...prev, content: undefined }));
+    // Restore focus + place cursor after the inserted link.
+    requestAnimationFrame(() => {
+      if (el) {
+        el.focus();
+        const pos = start + snippet.length;
+        el.setSelectionRange(pos, pos);
+      }
+    });
+  }
 
   // Reset form when modal opens
   useEffect(() => {
@@ -135,14 +161,15 @@ export default function WriteKudoModal({
     return () => document.removeEventListener("mousedown", onOutside);
   }, []);
 
-  // Esc key closes modal
+  // Esc key closes modal — but not while the nested Add-link box is open
+  // (that box handles its own Esc, otherwise one press closes both).
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape" && open) onClose();
+      if (e.key === "Escape" && open && !linkBoxOpen) onClose();
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  }, [open, onClose, linkBoxOpen]);
 
   // Prevent body scroll while modal is open
   useEffect(() => {
@@ -402,7 +429,7 @@ export default function WriteKudoModal({
                 <ToolbarBtn label="Numbered list">
                   <Image src="/sun-kudos/icon-number-list.svg" alt="Numbered list" width={24} height={24} />
                 </ToolbarBtn>
-                <ToolbarBtn label="Link">
+                <ToolbarBtn label="Link" onClick={() => setLinkBoxOpen(true)}>
                   <Image src="/sun-kudos/icon-link.svg" alt="Link" width={24} height={24} />
                 </ToolbarBtn>
                 <ToolbarBtn label="Quote" last>
@@ -419,6 +446,7 @@ export default function WriteKudoModal({
 
             {/* Textarea */}
             <textarea
+              ref={bodyRef}
               value={form.content}
               onChange={(e) => {
                 setForm((prev) => ({ ...prev, content: e.target.value }));
@@ -590,6 +618,12 @@ export default function WriteKudoModal({
 
         </form>
       </div>
+
+      <AddLinkBox
+        open={linkBoxOpen}
+        onClose={() => setLinkBoxOpen(false)}
+        onInsert={insertLink}
+      />
     </div>
   );
 }
