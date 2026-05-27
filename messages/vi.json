@@ -115,5 +115,26 @@
     "ariaLabel": "Chọn ngôn ngữ",
     "vi": "VN",
     "en": "EN"
+  },
+  "SunKudos": {
+    "heroTitle": "Hệ thống ghi nhận và cảm ơn",
+    "sendKudosPlaceholder": "Hôm nay, bạn muốn gửi lời cảm ơn và ghi nhận đến ai?",
+    "searchProfilePlaceholder": "Tìm kiếm profile Sunner",
+    "highlightKudos": "HIGHLIGHT KUDOS",
+    "spotlightBoard": "SPOTLIGHT BOARD",
+    "allKudos": "ALL KUDOS",
+    "filterHashtag": "Hashtag",
+    "filterDepartment": "Phòng ban",
+    "copyLink": "Copy Link",
+    "viewDetails": "Xem chi tiết",
+    "emptyKudos": "Hiện tại chưa có Kudos nào.",
+    "statKudosReceived": "Số Kudos bạn nhận được:",
+    "statKudosSent": "Số Kudos bạn đã gửi:",
+    "statHeartsReceived": "Số tim bạn nhận được:",
+    "statSecretBoxOpened": "Số Secret Box bạn đã mở:",
+    "statSecretBoxUnopened": "Số Secret Box chưa mở:",
+    "openSecretBox": "Mở Secret Box",
+    "giftRecipientsTitle": "10 SUNNER NHẬN QUÀ MỚI NHẤT",
+    "noData": "Chưa có dữ liệu"
   }
 }
