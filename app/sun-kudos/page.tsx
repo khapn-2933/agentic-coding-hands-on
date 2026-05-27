@@ -2,7 +2,9 @@ import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import {
   getAllKudos,
   getCurrentUserStats,
+  getHashtagSuggestions,
   getHighlightKudos,
+  getRecipientOptions,
   getRecentGiftRecipients,
   getSpotlightData,
 } from "@/lib/sun-kudos/queries";
@@ -48,20 +50,23 @@ export default async function SunKudosPage() {
       undefined;
   }
 
-  const [highlightKudos, allKudos, spotlight, stats, gifts] = await Promise.all([
-    getHighlightKudos(5),
-    getAllKudos(20),
-    getSpotlightData(),
-    getCurrentUserStats(),
-    getRecentGiftRecipients(5),
-  ]);
+  const [highlightKudos, allKudos, spotlight, stats, gifts, recipients, hashtags] =
+    await Promise.all([
+      getHighlightKudos(5),
+      getAllKudos(20),
+      getSpotlightData(),
+      getCurrentUserStats(),
+      getRecentGiftRecipients(5),
+      getRecipientOptions(),
+      getHashtagSuggestions(),
+    ]);
 
   return (
     <>
       <SaaHeader user={headerUser} activePath="sun-kudos" />
 
       <main className="flex flex-1 flex-col bg-[#00101A] pt-20">
-        <KudosHero />
+        <KudosHero recipientOptions={recipients} hashtagSuggestions={hashtags} />
 
         <HighlightKudosSection kudos={highlightKudos} />
 

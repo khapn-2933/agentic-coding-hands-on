@@ -18,10 +18,14 @@ interface KudosRow {
   image_urls: string[];
   like_count: number;
   is_highlight: boolean;
+  is_anonymous: boolean;
+  anonymous_name: string | null;
   created_at: string;
   sender: ProfileRow | null;
   receiver: ProfileRow | null;
 }
+
+const ANONYMOUS_NAME = "Người ẩn danh";
 
 const TZ = "Asia/Ho_Chi_Minh";
 
@@ -52,9 +56,19 @@ function toPerson(row: ProfileRow | null): KudosPerson {
 }
 
 function toEntry(row: KudosRow): KudosEntry {
+  // Anonymous kudos hide the sender's identity on the board.
+  const sender: KudosPerson = row.is_anonymous
+    ? {
+        name: row.anonymous_name?.trim() || ANONYMOUS_NAME,
+        department: "—",
+        badge: "New Hero",
+        avatarUrl: `https://i.pravatar.cc/64?u=anon-${row.id}`,
+      }
+    : toPerson(row.sender);
+
   return {
     id: row.id,
-    sender: toPerson(row.sender),
+    sender,
     receiver: toPerson(row.receiver),
     postedAt: formatPostedAt(row.created_at),
     title: row.title ?? "",
@@ -67,7 +81,8 @@ function toEntry(row: KudosRow): KudosEntry {
 }
 
 const KUDOS_SELECT = `
-  id, title, content, hashtags, image_urls, like_count, is_highlight, created_at,
+  id, title, content, hashtags, image_urls, like_count, is_highlight,
+  is_anonymous, anonymous_name, created_at,
   sender:profiles!sender_id(id, full_name, department_id, avatar_url, badge),
   receiver:profiles!receiver_id(id, full_name, department_id, avatar_url, badge)
 `;
@@ -223,4 +238,37 @@ export async function getRecentGiftRecipients(limit = 5): Promise<GiftRecipient[
     gift: "Nhận được 1 áo phông SAA",
     avatarUrl: p.avatar_url ?? `https://i.pravatar.cc/64?u=${p.id}`,
   }));
+}
+
+export interface RecipientOption {
+  id: string;
+  name: string;
+  department: string;
+  avatarUrl: string;
+}
+
+/** All profiles, for the "Viết Kudo" recipient typeahead (client-side filter). */
+export async function getRecipientOptions(): Promise<RecipientOption[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("profiles")
+    .select("id, full_name, department_id, avatar_url")
+    .order("full_name", { ascending: true });
+  return (data ?? []).map((p) => ({
+    id: p.id,
+    name: p.full_name,
+    department: p.department_id ?? "—",
+    avatarUrl: p.avatar_url ?? `https://i.pravatar.cc/64?u=${p.id}`,
+  }));
+}
+
+/** Distinct hashtags already used, for the compose-modal suggestion dropdown. */
+export async function getHashtagSuggestions(limit = 200): Promise<string[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase.from("kudos").select("hashtags").limit(limit);
+  const set = new Set<string>();
+  for (const row of data ?? []) {
+    for (const tag of (row.hashtags as string[]) ?? []) set.add(tag);
+  }
+  return Array.from(set).sort();
 }
