@@ -20,6 +20,8 @@ export interface KudosEntry {
   imageUrls: string[];
   likeCount: number;
   isLiked: boolean;
+  /** True when the current user is the sender — they can't like their own kudos. */
+  isOwn?: boolean;
   isNew?: boolean;
 }
 

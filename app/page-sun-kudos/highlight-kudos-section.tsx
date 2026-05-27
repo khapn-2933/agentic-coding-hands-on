@@ -3,9 +3,25 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import KudosCardHighlight from "./kudos-card-highlight";
+import KudosFilters from "./kudos-filters";
 import type { KudosEntry } from "./mock-data";
+import type { Department } from "@/lib/sun-kudos/queries";
 
-export default function HighlightKudosSection({ kudos }: { kudos: KudosEntry[] }) {
+interface HighlightKudosSectionProps {
+  kudos: KudosEntry[];
+  hashtagSuggestions: string[];
+  departments: Department[];
+  selectedHashtags: string[];
+  selectedDepartment?: string;
+}
+
+export default function HighlightKudosSection({
+  kudos,
+  hashtagSuggestions,
+  departments,
+  selectedHashtags,
+  selectedDepartment,
+}: HighlightKudosSectionProps) {
   const t = useTranslations("SunKudos");
   const total = kudos.length;
   const [currentIndex, setCurrentIndex] = useState(total > 1 ? 1 : 0);
@@ -54,41 +70,13 @@ export default function HighlightKudosSection({ kudos }: { kudos: KudosEntry[] }
             >
               {t("highlightKudos")}
             </h2>
-            {/* Filter buttons */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                className="flex items-center gap-2 px-4 py-4 text-[16px] font-bold rounded transition-colors hover:bg-white/10"
-                style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  color: "#FFFFFF",
-                  letterSpacing: "0.15px",
-                  border: "1px solid #998C5F",
-                  background: "rgba(255,234,158,0.10)",
-                }}
-              >
-                {t("filterHashtag")}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M7 10l5 5 5-5" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-2 px-4 py-4 text-[16px] font-bold rounded transition-colors hover:bg-white/10"
-                style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  color: "#FFFFFF",
-                  letterSpacing: "0.15px",
-                  border: "1px solid #998C5F",
-                  background: "rgba(255,234,158,0.10)",
-                }}
-              >
-                {t("filterDepartment")}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M7 10l5 5 5-5" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </div>
+            {/* Filter dropdowns (Hashtag multi-select / Phòng ban single-select) */}
+            <KudosFilters
+              hashtagSuggestions={hashtagSuggestions}
+              departments={departments}
+              selectedHashtags={selectedHashtags}
+              selectedDepartment={selectedDepartment}
+            />
           </div>
         </div>
       </div>

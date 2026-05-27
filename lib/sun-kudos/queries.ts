@@ -18,10 +18,14 @@ interface KudosRow {
   image_urls: string[];
   like_count: number;
   is_highlight: boolean;
+  is_anonymous: boolean;
+  anonymous_name: string | null;
   created_at: string;
   sender: ProfileRow | null;
   receiver: ProfileRow | null;
 }
+
+const ANONYMOUS_NAME = "Người ẩn danh";
 
 const TZ = "Asia/Ho_Chi_Minh";
 
@@ -51,10 +55,27 @@ function toPerson(row: ProfileRow | null): KudosPerson {
   };
 }
 
-function toEntry(row: KudosRow): KudosEntry {
+interface LikeContext {
+  profileId: string | null;
+  likedSet: Set<string>;
+}
+
+const NO_LIKE_CONTEXT: LikeContext = { profileId: null, likedSet: new Set() };
+
+function toEntry(row: KudosRow, ctx: LikeContext = NO_LIKE_CONTEXT): KudosEntry {
+  // Anonymous kudos hide the sender's identity on the board.
+  const sender: KudosPerson = row.is_anonymous
+    ? {
+        name: row.anonymous_name?.trim() || ANONYMOUS_NAME,
+        department: "—",
+        badge: "New Hero",
+        avatarUrl: `https://i.pravatar.cc/64?u=anon-${row.id}`,
+      }
+    : toPerson(row.sender);
+
   return {
     id: row.id,
-    sender: toPerson(row.sender),
+    sender,
     receiver: toPerson(row.receiver),
     postedAt: formatPostedAt(row.created_at),
     title: row.title ?? "",
@@ -62,36 +83,110 @@ function toEntry(row: KudosRow): KudosEntry {
     hashtags: row.hashtags,
     imageUrls: row.image_urls,
     likeCount: row.like_count,
-    isLiked: false,
+    isLiked: ctx.likedSet.has(row.id),
+    // The sender can't like their own kudos (compare real sender even if anon).
+    isOwn: !!ctx.profileId && row.sender?.id === ctx.profileId,
   };
 }
 
-const KUDOS_SELECT = `
-  id, title, content, hashtags, image_urls, like_count, is_highlight, created_at,
-  sender:profiles!sender_id(id, full_name, department_id, avatar_url, badge),
-  receiver:profiles!receiver_id(id, full_name, department_id, avatar_url, badge)
-`;
+// Resolve the current user's profile id (read-only) + the set of kudos they've
+// liked, so the board can render heart state. Returns empty context when signed
+// out or profile-less.
+async function getLikeContext(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>
+): Promise<LikeContext> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return NO_LIKE_CONTEXT;
 
-export async function getAllKudos(limit = 20): Promise<KudosEntry[]> {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("kudos")
-    .select(KUDOS_SELECT)
-    .order("created_at", { ascending: false })
-    .limit(limit);
-  if (error || !data) return [];
-  return (data as unknown as KudosRow[]).map(toEntry);
+  let profileId: string | null = null;
+  const byUser = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  profileId = byUser.data?.id ?? null;
+  if (!profileId && user.email) {
+    const byEmail = await supabase
+      .from("profiles")
+      .select("id, user_id")
+      .eq("email", user.email)
+      .maybeSingle();
+    // Only adopt a seeded profile that is unclaimed or already ours — never
+    // one linked to a different auth user (would leak their liked set / isOwn).
+    if (
+      byEmail.data &&
+      (byEmail.data.user_id === null || byEmail.data.user_id === user.id)
+    ) {
+      profileId = byEmail.data.id;
+    }
+  }
+  if (!profileId) return NO_LIKE_CONTEXT;
+
+  const { data: likes } = await supabase
+    .from("kudos_likes")
+    .select("kudos_id")
+    .eq("user_id", profileId);
+  return {
+    profileId,
+    likedSet: new Set((likes ?? []).map((l) => l.kudos_id as string)),
+  };
 }
 
-export async function getHighlightKudos(limit = 5): Promise<KudosEntry[]> {
+export interface KudosFilters {
+  /** Raw hashtag strings (with leading #). Matches kudos containing ANY of them. */
+  hashtags?: string[];
+  /** department_id — keeps kudos whose RECEIVER belongs to that department. */
+  department?: string;
+}
+
+// When filtering by department we must INNER-join the receiver so the eq filter
+// prunes parent kudos rows (a plain embed would only filter the nested data).
+function kudosSelect(department?: string): string {
+  const receiverJoin = department
+    ? "profiles!receiver_id!inner"
+    : "profiles!receiver_id";
+  return `
+    id, title, content, hashtags, image_urls, like_count, is_highlight,
+    is_anonymous, anonymous_name, created_at,
+    sender:profiles!sender_id(id, full_name, department_id, avatar_url, badge),
+    receiver:${receiverJoin}(id, full_name, department_id, avatar_url, badge)
+  `;
+}
+
+export async function getAllKudos(
+  limit = 20,
+  filters?: KudosFilters
+): Promise<KudosEntry[]> {
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from("kudos")
-    .select(KUDOS_SELECT)
+    .select(kudosSelect(filters?.department))
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (filters?.hashtags?.length) query = query.overlaps("hashtags", filters.hashtags);
+  if (filters?.department) query = query.eq("receiver.department_id", filters.department);
+  const [{ data, error }, ctx] = await Promise.all([query, getLikeContext(supabase)]);
+  if (error || !data) return [];
+  return (data as unknown as KudosRow[]).map((row) => toEntry(row, ctx));
+}
+
+export async function getHighlightKudos(
+  limit = 5,
+  filters?: KudosFilters
+): Promise<KudosEntry[]> {
+  const supabase = await createSupabaseServerClient();
+  let query = supabase
+    .from("kudos")
+    .select(kudosSelect(filters?.department))
     .order("like_count", { ascending: false })
     .limit(limit);
+  if (filters?.hashtags?.length) query = query.overlaps("hashtags", filters.hashtags);
+  if (filters?.department) query = query.eq("receiver.department_id", filters.department);
+  const [{ data, error }, ctx] = await Promise.all([query, getLikeContext(supabase)]);
   if (error || !data) return [];
-  return (data as unknown as KudosRow[]).map(toEntry);
+  return (data as unknown as KudosRow[]).map((row) => toEntry(row, ctx));
 }
 
 export interface SpotlightData {
@@ -223,4 +318,52 @@ export async function getRecentGiftRecipients(limit = 5): Promise<GiftRecipient[
     gift: "Nhận được 1 áo phông SAA",
     avatarUrl: p.avatar_url ?? `https://i.pravatar.cc/64?u=${p.id}`,
   }));
+}
+
+export interface RecipientOption {
+  id: string;
+  name: string;
+  department: string;
+  avatarUrl: string;
+}
+
+/** All profiles, for the "Viết Kudo" recipient typeahead (client-side filter). */
+export async function getRecipientOptions(): Promise<RecipientOption[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("profiles")
+    .select("id, full_name, department_id, avatar_url")
+    .order("full_name", { ascending: true });
+  return (data ?? []).map((p) => ({
+    id: p.id,
+    name: p.full_name,
+    department: p.department_id ?? "—",
+    avatarUrl: p.avatar_url ?? `https://i.pravatar.cc/64?u=${p.id}`,
+  }));
+}
+
+/** Distinct hashtags already used, for the compose-modal suggestion dropdown. */
+export async function getHashtagSuggestions(limit = 200): Promise<string[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase.from("kudos").select("hashtags").limit(limit);
+  const set = new Set<string>();
+  for (const row of data ?? []) {
+    for (const tag of (row.hashtags as string[]) ?? []) set.add(tag);
+  }
+  return Array.from(set).sort();
+}
+
+export interface Department {
+  id: string;
+  name: string;
+}
+
+/** Departments for the "Phòng ban" filter dropdown. */
+export async function getDepartments(): Promise<Department[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("departments")
+    .select("id, name")
+    .order("name", { ascending: true });
+  return data ?? [];
 }

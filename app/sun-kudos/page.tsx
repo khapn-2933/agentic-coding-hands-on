@@ -2,7 +2,10 @@ import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import {
   getAllKudos,
   getCurrentUserStats,
+  getDepartments,
+  getHashtagSuggestions,
   getHighlightKudos,
+  getRecipientOptions,
   getRecentGiftRecipients,
   getSpotlightData,
 } from "@/lib/sun-kudos/queries";
@@ -15,7 +18,21 @@ import AllKudosFeed from "../page-sun-kudos/all-kudos-feed";
 import StatsSidebar from "../page-sun-kudos/stats-sidebar";
 import GiftRecipientsPanel from "../page-sun-kudos/gift-recipients-panel";
 
-export default async function SunKudosPage() {
+export default async function SunKudosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ hashtags?: string; department?: string }>;
+}) {
+  const sp = await searchParams;
+  const selectedHashtags = sp.hashtags
+    ? sp.hashtags.split(",").map((s) => s.trim()).filter(Boolean)
+    : [];
+  const selectedDepartment = sp.department || undefined;
+  const filters = {
+    hashtags: selectedHashtags.length ? selectedHashtags : undefined,
+    department: selectedDepartment,
+  };
+
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -48,12 +65,24 @@ export default async function SunKudosPage() {
       undefined;
   }
 
-  const [highlightKudos, allKudos, spotlight, stats, gifts] = await Promise.all([
-    getHighlightKudos(5),
-    getAllKudos(20),
+  const [
+    highlightKudos,
+    allKudos,
+    spotlight,
+    stats,
+    gifts,
+    recipients,
+    hashtags,
+    departments,
+  ] = await Promise.all([
+    getHighlightKudos(5, filters),
+    getAllKudos(20, filters),
     getSpotlightData(),
     getCurrentUserStats(),
     getRecentGiftRecipients(5),
+    getRecipientOptions(),
+    getHashtagSuggestions(),
+    getDepartments(),
   ]);
 
   return (
@@ -61,9 +90,15 @@ export default async function SunKudosPage() {
       <SaaHeader user={headerUser} activePath="sun-kudos" />
 
       <main className="flex flex-1 flex-col bg-[#00101A] pt-20">
-        <KudosHero />
+        <KudosHero recipientOptions={recipients} hashtagSuggestions={hashtags} />
 
-        <HighlightKudosSection kudos={highlightKudos} />
+        <HighlightKudosSection
+          kudos={highlightKudos}
+          hashtagSuggestions={hashtags}
+          departments={departments}
+          selectedHashtags={selectedHashtags}
+          selectedDepartment={selectedDepartment}
+        />
 
         <SpotlightBoard spotlight={spotlight} currentUserName={currentUserName} />
 

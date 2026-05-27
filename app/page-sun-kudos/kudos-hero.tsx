@@ -1,10 +1,39 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import WriteKudoModal, { type WriteKudoPayload } from "./write-kudo-modal";
+import { createKudos } from "@/lib/sun-kudos/actions";
+import type { RecipientOption } from "@/lib/sun-kudos/queries";
 
-export default function KudosHero() {
+interface KudosHeroProps {
+  recipientOptions: RecipientOption[];
+  hashtagSuggestions: string[];
+}
+
+export default function KudosHero({
+  recipientOptions,
+  hashtagSuggestions,
+}: KudosHeroProps) {
   const t = useTranslations("SunKudos");
+  const router = useRouter();
+  const [composeOpen, setComposeOpen] = useState(false);
+
+  async function handleCreate(payload: WriteKudoPayload) {
+    const res = await createKudos({
+      recipientId: payload.recipientId,
+      title: payload.title,
+      content: payload.content,
+      hashtags: payload.hashtags,
+      isAnonymous: payload.isAnonymous,
+      anonymousName: payload.anonymousName,
+    });
+    // Throwing keeps the modal open; on success the modal closes itself.
+    if (!res.ok) throw new Error(res.error ?? "create_failed");
+    router.refresh();
+  }
 
   return (
     <section className="relative w-full overflow-hidden" style={{ minHeight: "512px" }}>
@@ -68,9 +97,12 @@ export default function KudosHero() {
             role="button"
             tabIndex={0}
             aria-label={t("sendKudosPlaceholder")}
-            onClick={() => {}}
+            onClick={() => setComposeOpen(true)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") e.preventDefault();
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setComposeOpen(true);
+              }
             }}
           >
             {/* Pencil icon */}
@@ -140,6 +172,14 @@ export default function KudosHero() {
           </div>
         </div>
       </div>
+
+      <WriteKudoModal
+        open={composeOpen}
+        onClose={() => setComposeOpen(false)}
+        recipientOptions={recipientOptions}
+        hashtagSuggestions={hashtagSuggestions}
+        onSubmit={handleCreate}
+      />
     </section>
   );
 }

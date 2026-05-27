@@ -12,30 +12,59 @@ interface SpotlightBoardProps {
   currentUserName?: string;
 }
 
-// Deterministic pseudo-random positions so they're stable across renders
-function getPosition(index: number, total: number) {
-  const goldenAngle = 137.5;
-  const angle = (index * goldenAngle * Math.PI) / 180;
-  const r = 0.25 + 0.55 * Math.sqrt(index / total);
-  const x = 50 + r * 38 * Math.cos(angle);
-  const y = 15 + r * 60 * Math.sin(angle);
-  return { x: Math.max(2, Math.min(90, x)), y: Math.max(5, Math.min(85, y)) };
-}
-
 const FONT_SIZES = [11, 13, 14, 16, 18, 20, 13, 15, 12, 17, 14, 13, 16, 12, 18, 11, 14, 15];
 const OPACITIES = [1, 0.7, 0.85, 0.6, 1, 0.75, 0.9, 0.65, 1, 0.8, 0.7, 0.9, 1, 0.6, 0.85, 0.7, 0.75, 0.9];
+// Deterministic vertical stagger (px) so names sit "so le" like the design
+// word cloud instead of in straight rows. Bounded < row gap (40px) so wrapped
+// lines never overlap.
+const STAGGER = [0, 14, -10, 8, -16, 6, -12, 16, -6, 12, -14, 10, -8, 16, -12, 6];
 
 export default function SpotlightBoard({ spotlight, currentUserName }: SpotlightBoardProps) {
   const t = useTranslations("SunKudos");
   const { totalKudos, activityLog } = spotlight;
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [query, setQuery] = useState("");
 
   // Always surface the current user in the cloud so the red highlight is visible,
   // even if they have no kudos yet.
-  const names =
+  const allNames =
     currentUserName && !spotlight.names.includes(currentUserName)
       ? [currentUserName, ...spotlight.names]
       : spotlight.names;
+
+  // Spotlight search: filter the cloud to names matching the query (trimmed,
+  // case-insensitive). Empty query shows everyone.
+  const q = query.trim().toLowerCase();
+  const names = q
+    ? allNames.filter((n) => n.toLowerCase().includes(q))
+    : allNames;
+
+  // Reserve the bottom-LEFT quarter for the timeline: names fill the top
+  // (full width) + the bottom-RIGHT, ~3/4 of the box. Split ~65% to the top.
+  const splitAt = Math.ceil(names.length * 0.65);
+  const topNames = names.slice(0, splitAt);
+  const bottomRightNames = names.slice(splitAt);
+
+  const renderName = (name: string, i: number) => {
+    const fontSize = FONT_SIZES[i % FONT_SIZES.length];
+    const opacity = OPACITIES[i % OPACITIES.length];
+    const offset = STAGGER[i % STAGGER.length];
+    const isCurrentUser = currentUserName && name === currentUserName;
+    return (
+      <span
+        key={`${name}-${i}`}
+        className="font-bold whitespace-nowrap cursor-pointer hover:text-[#FFEA9E] transition-colors"
+        style={{
+          fontSize: `${fontSize}px`,
+          fontFamily: "Montserrat, sans-serif",
+          color: isCurrentUser ? "#D4271D" : `rgba(255,255,255,${opacity})`,
+          transform: `translateY(${offset}px)`,
+        }}
+      >
+        {name}
+      </span>
+    );
+  };
 
   return (
     <section className="w-full bg-[#00101A] pt-10">
@@ -102,15 +131,15 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
                     fill="rgba(255,255,255,0.4)"
                   />
                 </svg>
-                <span
-                  className="text-[13px]"
-                  style={{
-                    fontFamily: "Montserrat, sans-serif",
-                    color: "rgba(255,255,255,0.35)",
-                  }}
-                >
-                  {t("searchProfilePlaceholder")}
-                </span>
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  maxLength={100}
+                  placeholder={t("searchProfilePlaceholder")}
+                  className="w-full bg-transparent text-[13px] text-white outline-none placeholder:text-white/35"
+                  style={{ fontFamily: "Montserrat, sans-serif" }}
+                />
               </div>
 
               {/* Kudos count — node 3007:17482: WHITE #FFF, 36px/700 */}
@@ -130,73 +159,72 @@ export default function SpotlightBoard({ spotlight, currentUserName }: Spotlight
               <div style={{ width: "240px" }} />
             </div>
 
-            {/* Word cloud canvas */}
-            <div className="relative mx-8" style={{ height: "320px" }}>
-              {names.map((name, i) => {
-                const pos = getPosition(i, names.length);
-                const fontSize = FONT_SIZES[i % FONT_SIZES.length];
-                const opacity = OPACITIES[i % OPACITIES.length];
-                const isCurrentUser = currentUserName && name === currentUserName;
-                return (
-                  <span
-                    key={`${name}-${i}`}
-                    className="absolute font-bold whitespace-nowrap cursor-pointer hover:text-[#FFEA9E] transition-colors"
-                    style={{
-                      left: `${pos.x.toFixed(3)}%`,
-                      top: `${pos.y.toFixed(3)}%`,
-                      fontSize: `${fontSize}px`,
-                      fontFamily: "Montserrat, sans-serif",
-                      color: isCurrentUser ? "#D4271D" : `rgba(255,255,255,${opacity})`,
-                      transform: "translate(-50%, -50%)",
-                    }}
+            {/* Canvas — names occupy ~3/4 of the box (full-width top + bottom-
+                right); the faint activity timeline gets only the bottom-LEFT
+                quarter, so names never overlap the timeline. */}
+            <div className="relative mx-8 mb-8" style={{ minHeight: "360px" }}>
+              {/* Empty search result */}
+              {q && names.length === 0 && (
+                <div className="flex items-center justify-center py-24">
+                  <p
+                    className="text-[15px] font-bold"
+                    style={{ fontFamily: "Montserrat, sans-serif", color: "rgba(255,255,255,0.5)" }}
                   >
-                    {name}
-                  </span>
-                );
-              })}
-            </div>
+                    {t("noData")}
+                  </p>
+                </div>
+              )}
 
-            {/* Activity log — node 2940:14230: #FFF, 14px, 700 */}
-            <div
-              className="mx-8 mb-6 rounded-xl px-6 py-4"
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
-              }}
-            >
-              {activityLog.map((entry, i) => {
-                const isCurrentUser =
-                  currentUserName && entry.text.includes(currentUserName);
-                return (
-                  <div key={i} className="flex items-center gap-3 py-1.5">
-                    <span
-                      className="text-[14px] font-bold flex-shrink-0"
-                      style={{
-                        fontFamily: "Montserrat, sans-serif",
-                        color: "#FFFFFF",
-                      }}
-                    >
-                      {entry.time}
-                    </span>
-                    <span
-                      className="text-[14px] font-bold"
-                      style={{
-                        fontFamily: "Montserrat, sans-serif",
-                        color: isCurrentUser ? "#D4271D" : "#FFFFFF",
-                      }}
-                    >
-                      {entry.text}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+              {/* Top region — full-width staggered name cloud */}
+              <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-9 py-6">
+                {topNames.map((name, i) => renderName(name, i))}
+              </div>
 
-            {/* Fullscreen icon — bottom-right per Figma */}
-            <div className="flex justify-end px-8 pb-4">
+              {/* Bottom region — left quarter = faint timeline, right = more names */}
+              <div className="flex items-end gap-6">
+                {/* Activity timeline — bottom-left, no background, lines fade
+                    with age (newest bottom = full, older fainter → "mờ ảo"). */}
+                <div className="w-1/2 flex flex-col">
+                  {[...activityLog].reverse().map((entry, i, arr) => {
+                    const opacity = 0.2 + (0.8 * (i + 1)) / arr.length;
+                    const isCurrentUser =
+                      currentUserName && entry.text.includes(currentUserName);
+                    return (
+                      <div
+                        key={`${entry.time}-${i}`}
+                        className="flex items-center gap-3 py-1"
+                        style={{ opacity }}
+                      >
+                        <span
+                          className="text-[14px] font-bold flex-shrink-0"
+                          style={{ fontFamily: "Montserrat, sans-serif", color: "#FFFFFF" }}
+                        >
+                          {entry.time}
+                        </span>
+                        <span
+                          className="text-[14px] font-bold truncate"
+                          style={{
+                            fontFamily: "Montserrat, sans-serif",
+                            color: isCurrentUser ? "#D4271D" : "#FFFFFF",
+                          }}
+                        >
+                          {entry.text}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Bottom-right names */}
+                <div className="w-1/2 flex flex-wrap items-center justify-center gap-x-6 gap-y-8 pb-2">
+                  {bottomRightNames.map((name, i) => renderName(name, i + splitAt))}
+                </div>
+              </div>
+
+              {/* Fullscreen / pan-zoom — bottom-right corner */}
               <button
                 type="button"
-                className="flex items-center justify-center w-10 h-10 rounded cursor-pointer hover:bg-white/10 transition-colors"
+                className="absolute bottom-0 right-0 flex items-center justify-center w-10 h-10 rounded cursor-pointer hover:bg-white/10 transition-colors"
                 aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
                 onClick={() => setIsFullscreen((v) => !v)}
               >
